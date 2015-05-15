@@ -702,15 +702,10 @@
 
     <!-- Wear Reply -->
     <string name="reply_label">Reply</string>
-    <string name="label">Reply</string>
-    <string-array name="wear_replies">
-        <item>Yes</item>
-        <item>No</item>
-        <item>OK</item>
-        <item>Thanks</item>
-        <item>:)</item>
-        <item>:(</item>
-    </string-array>
+    <string name="wear_reply_label">Reply</string>
+
+    <string name="wear_reply_ok">OK</string>
+    <string name="wear_reply_thanks">Thanks</string>
     <!-- EOF -->
 
 </resources>

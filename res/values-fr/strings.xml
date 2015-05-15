@@ -594,14 +594,9 @@ Importer un fichier de sauvegarde non-chiffré. Compatible avec « SMSBackup And
   <string name="transport_selection_list_item__transport_icon">Icône de transport</string>
   <!-- Wear Reply -->
   <string name="reply_label">Réponse</string>
-  <string name="label">Réponse</string>
-  <string-array name="wear_replies">
-    <item>Oui</item>
-    <item>Non</item>
-    <item>OK</item>
-    <item>Merci</item>
-    <item>:)</item>
-    <item>:(</item>
-  </string-array>
+  <string name="wear_reply_label">Réponse</string>
+
+  <string name="wear_reply_ok">OK</string>
+  <string name="wear_reply_thanks">Merci</string>
   <!--EOF-->
 </resources>

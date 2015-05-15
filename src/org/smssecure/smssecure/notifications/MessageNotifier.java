@@ -209,7 +209,7 @@ public class MessageNotifier {
       RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_VOICE_REPLY).setChoices(replyChoices).build();
 
       Action replyAction = new Action.Builder(R.drawable.ic_reply_icon,
-              context.getString(R.string.label),
+              context.getString(R.string.wear_reply_label),
               notificationState.getReplyIntent(context, masterSecret, recipient.getRecipientId())).addRemoteInput(remoteInput).build();
 
       NotificationCompat.WearableExtender wearableExtender = new NotificationCompat.WearableExtender();
