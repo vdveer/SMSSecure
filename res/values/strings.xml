@@ -700,6 +700,12 @@
     <!-- transport_selection_list_item -->
     <string name="transport_selection_list_item__transport_icon">Transport icon</string>
 
+    <!-- Wear Reply -->
+    <string name="reply_label">Reply</string>
+    <string name="wear_reply_label">Reply</string>
+
+    <string name="wear_reply_ok">OK</string>
+    <string name="wear_reply_thanks">Thanks</string>
     <!-- EOF -->
 
 </resources>

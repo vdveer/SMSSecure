@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import org.smssecure.smssecure.crypto.MasterSecret;
+import org.smssecure.smssecure.recipients.Recipient;
 
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -60,6 +61,30 @@ public class NotificationState {
     // truncated to one element when the PendingIntent fires.  Thanks guys!
     Log.w("NotificationState", "Pending array off intent length: " +
         intent.getLongArrayExtra("thread_ids").length);
+
+    return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+  }
+
+  public PendingIntent getReplyIntent(Context context, MasterSecret masterSecret, long recipientId) {
+    long[] threadArray = new long[threads.size()];
+    int index          = 0;
+
+    for (long thread : threads) {
+      Log.w("NotificationState", "Added thread: " + thread);
+      threadArray[index++] = thread;
+    }
+
+    Intent intent = new Intent(WearReplyReceiver.REPLY_ACTION);
+    intent.putExtra("thread_ids", threadArray);
+    intent.putExtra("master_secret", masterSecret);
+    intent.putExtra("recipientId", recipientId);
+    intent.setPackage(context.getPackageName());
+
+    // XXX : This is an Android bug.  If we don't pull off the extra
+    // once before handing off the PendingIntent, the array will be
+    // truncated to one element when the PendingIntent fires.  Thanks guys!
+    Log.w("NotificationState", "Pending array off intent length: " +
+            intent.getLongArrayExtra("thread_ids").length);
 
     return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
   }

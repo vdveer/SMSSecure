@@ -201,4 +201,13 @@
       <item>@string/arrays__use_custom</item>
   </string-array>
 
+  <string-array name="wear_replies">
+      <item>@string/yes</item>
+      <item>@string/no</item>
+      <item>@string/wear_reply_ok</item>
+      <item>@string/wear_reply_thanks</item>
+      <item>:)</item>
+      <item>:(</item>
+    </string-array>
+
 </resources>
