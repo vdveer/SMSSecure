@@ -13,3 +13,6 @@
 [submodule "libs/com.commonsware.cwac.camera"]
 	path = libs/com.commonsware.cwac.camera
 	url = https://github.com/commonsguy/cwac-camera
+[submodule "libs/org.whispersystems.jobmanager"]
+	path = libs/org.whispersystems.jobmanager
+	url = https://github.com/SMSSecure/jobmanager.git
