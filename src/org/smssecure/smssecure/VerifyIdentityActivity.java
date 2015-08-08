@@ -32,7 +32,6 @@ import org.whispersystems.libaxolotl.AxolotlAddress;
 import org.whispersystems.libaxolotl.IdentityKey;
 import org.whispersystems.libaxolotl.state.SessionRecord;
 import org.whispersystems.libaxolotl.state.SessionStore;
-import org.whispersystems.textsecure.api.push.TextSecureAddress;
 
 /**
  * Activity for verifying identity keys.
@@ -169,7 +168,7 @@ public class VerifyIdentityActivity extends KeyScanningActivity {
 
   private IdentityKey getRemoteIdentityKey(MasterSecret masterSecret, Recipient recipient) {
     SessionStore   sessionStore   = new SMSSecureSessionStore(this, masterSecret);
-    AxolotlAddress axolotlAddress = new AxolotlAddress(recipient.getNumber(), TextSecureAddress.DEFAULT_DEVICE_ID);
+    AxolotlAddress axolotlAddress = new AxolotlAddress(recipient.getNumber(), 1);
     SessionRecord  record         = sessionStore.loadSession(axolotlAddress);
 
     if (record == null) {
