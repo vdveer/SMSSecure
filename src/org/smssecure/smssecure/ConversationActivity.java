@@ -59,6 +59,7 @@ import com.google.protobuf.ByteString;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
+import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 
 import org.smssecure.smssecure.TransportOptions.OnTransportChangedListener;
 import org.smssecure.smssecure.color.MaterialColor;
@@ -135,7 +136,8 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     implements ConversationFragment.ConversationFragmentListener,
                AttachmentManager.AttachmentListener,
                RecipientsModifiedListener,
-               OnKeyboardShownListener
+               OnKeyboardShownListener,
+               OnShowcaseEventListener
 {
   private static final String TAG = ConversationActivity.class.getSimpleName();
 
@@ -370,7 +372,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   @Override
   public void onBackPressed() {
     Log.w(TAG, "onBackPressed()");
-    if (showcaseView != null)         hideShowcaseView();
+    if (showcaseView != null)         showcaseView.hide();
     else if (container.isInputOpen()) container.hideCurrentInput(composeText);
     else                              super.onBackPressed();
   }
@@ -877,12 +879,16 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
   private void initializeShowcaseView(View item) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      if (item != null && showcaseView == null) {
+      if (item != null &&
+          showcaseView == null &&
+         !SMSSecurePreferences.isShowcaseDisplayed(this))
+      {
         showcaseViewTarget = new ViewTarget(item);
         showcaseView = new ShowcaseView.Builder(this, true)
             .setTarget(showcaseViewTarget)
             .setStyle(R.style.CustomShowcaseTheme)
             .hideOnTouchOutside()
+            .setShowcaseEventListener(this)
             .build();
         showcaseView.setContentTitle(getString(R.string.ConversationActivity_showcaseview_title));
         showcaseView.setContentText(getString(R.string.ConversationActivity_showcaseview_description));
@@ -893,11 +899,20 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     }
   }
 
-  private void hideShowcaseView() {
-    if (showcaseView != null) {
-      showcaseView.hide();
+  @Override
+  public void onShowcaseViewDidHide(ShowcaseView sv) {
+    if (sv != null) {
       showcaseView = null;
+      SMSSecurePreferences.setShowcaseDisplayed(this, true);
     }
+  }
+
+  @Override
+  public void onShowcaseViewShow(ShowcaseView sv) {
+  }
+
+  @Override
+  public void onShowcaseViewHide(ShowcaseView sv) {
   }
 
   //////// Helper Methods
