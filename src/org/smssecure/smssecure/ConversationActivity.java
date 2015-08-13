@@ -370,8 +370,9 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   @Override
   public void onBackPressed() {
     Log.w(TAG, "onBackPressed()");
-    if (container.isInputOpen()) container.hideCurrentInput(composeText);
-    else                         super.onBackPressed();
+    if (showcaseView != null)         hideShowcaseView();
+    else if (container.isInputOpen()) container.hideCurrentInput(composeText);
+    else                              super.onBackPressed();
   }
 
   @Override
@@ -889,6 +890,13 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       }
     } else {
       Log.w(TAG, "ShowcaseView: API<11, skipping");
+    }
+  }
+
+  private void hideShowcaseView() {
+    if (showcaseView != null) {
+      showcaseView.hide();
+      showcaseView = null;
     }
   }
 
