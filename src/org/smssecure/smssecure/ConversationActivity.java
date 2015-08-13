@@ -49,6 +49,7 @@ import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -883,6 +884,9 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
           showcaseView == null &&
          !SMSSecurePreferences.isShowcaseDisplayed(this))
       {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+          getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
         showcaseViewTarget = new ViewTarget(item);
         showcaseView = new ShowcaseView.Builder(this, true)
             .setTarget(showcaseViewTarget)
