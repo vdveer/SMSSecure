@@ -33,6 +33,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.smssecure.smssecure.crypto.MasterSecret;
+import org.smssecure.smssecure.mms.MmsMediaConstraints;
 import org.smssecure.smssecure.preferences.AdvancedPreferenceFragment;
 import org.smssecure.smssecure.preferences.AppProtectionPreferenceFragment;
 import org.smssecure.smssecure.preferences.AppearancePreferenceFragment;
@@ -128,6 +129,12 @@ public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarA
       Intent intent = new Intent(this, KeyCachingService.class);
       intent.setAction(KeyCachingService.LOCALE_CHANGE_EVENT);
       startService(intent);
+    }
+    if(key.equals(SMSSecurePreferences.MMS_SIZE_PREF)){
+      int kb = sharedPreferences.getInt(SMSSecurePreferences.MMS_SIZE_PREF, 220);
+      if(kb > 0){
+        MmsMediaConstraints.MAX_MESSAGE_SIZE = 1024 * kb;
+      }
     }
   }
 
