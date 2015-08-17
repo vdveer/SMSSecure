@@ -18,6 +18,9 @@ package org.smssecure.smssecure;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.smssecure.smssecure.crypto.PRNGFixes;
 import org.smssecure.smssecure.dependencies.AxolotlStorageModule;
@@ -25,6 +28,7 @@ import org.smssecure.smssecure.dependencies.InjectableType;
 import org.smssecure.smssecure.jobs.persistence.EncryptingJobSerializer;
 import org.smssecure.smssecure.jobs.requirements.MasterSecretRequirementProvider;
 import org.smssecure.smssecure.jobs.requirements.ServiceRequirementProvider;
+import org.smssecure.smssecure.mms.MmsMediaConstraints;
 import org.smssecure.smssecure.util.SMSSecurePreferences;
 import org.whispersystems.jobqueue.JobManager;
 import org.whispersystems.jobqueue.dependencies.DependencyInjector;
@@ -59,6 +63,11 @@ public class ApplicationContext extends Application implements DependencyInjecto
     initializeLogging();
     initializeDependencyInjection();
     initializeJobManager();
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+    int kiloBytes = prefs.getInt("pref_mms_size", 220);
+    if(kiloBytes > 0)
+      MmsMediaConstraints.MAX_MESSAGE_SIZE = 1024 * kiloBytes;
   }
 
   @Override
