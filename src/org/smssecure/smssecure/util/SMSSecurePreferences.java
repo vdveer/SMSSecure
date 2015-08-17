@@ -79,7 +79,8 @@ public class SMSSecurePreferences {
   private static final String PUSH_REGISTRATION_REMINDER_PREF  = "pref_push_registration_reminder";
   private static final String RATING_LATER_PREF                = "pref_rating_later";
   private static final String RATING_ENABLED_PREF              = "pref_rating_enabled";
-  public  static final String NOTIFICATION_PRIVACY_PREF        = "pref_notification_privacy";
+  public static final String NOTIFICATION_PRIVACY_PREF        = "pref_notification_privacy";
+  public static final String MMS_SIZE_PREF                     = "pref_mms_size";
 
   public static NotificationPrivacyPreference getNotificationPrivacy(Context context) {
     return new NotificationPrivacyPreference(getStringPreference(context, NOTIFICATION_PRIVACY_PREF, "all"));
