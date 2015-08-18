@@ -115,6 +115,7 @@ public class MmsCipher {
     body.addPart(part);
     encryptedPdu.setSubject(new EncodedStringValue(WirePrefix.calculateEncryptedMmsSubject()));
     encryptedPdu.setBody(body);
+    encryptedPdu.setFrom(message.getFrom());
 
     return encryptedPdu;
   }

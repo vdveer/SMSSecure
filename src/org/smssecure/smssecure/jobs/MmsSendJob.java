@@ -111,15 +111,16 @@ public class MmsSendJob extends SendJob {
 
     message = getResolvedMessage(masterSecret, message, MediaConstraints.MMS_CONSTRAINTS, true);
     message.setBody(SmilUtil.getSmilBody(message.getBody()));
+    if (number != null && number.trim().length() != 0) {
+      message.setFrom(new EncodedStringValue(number));
+    }
 
     if (MmsDatabase.Types.isSecureType(message.getDatabaseMessageBox())) {
       Log.w(TAG, "Encrypting MMS...");
       message        = getEncryptedMessage(masterSecret, message);
     }
 
-    if (number != null && number.trim().length() != 0) {
-      message.setFrom(new EncodedStringValue(number));
-    }
+
     byte[] pduBytes = new PduComposer(context, message).make();
     if (pduBytes == null) {
       throw new UndeliverableMessageException("PDU composition failed, null payload");
