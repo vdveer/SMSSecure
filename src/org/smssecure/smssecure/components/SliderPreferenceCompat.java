@@ -14,7 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 /**
- * Created by gebruiker on 17-8-15.
+ * released under the APACHE 2.0 license
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
  */
 public class SliderPreferenceCompat extends DialogPreference implements SeekBar.OnSeekBarChangeListener, OnClickListener{
 
@@ -27,12 +29,8 @@ public class SliderPreferenceCompat extends DialogPreference implements SeekBar.
 
     private String mDialogMessage, mSuffix = "kB";
     private int mDefault, mMax, mValue = 0;
-    // ------------------------------------------------------------------------------------------
 
 
-
-    // ------------------------------------------------------------------------------------------
-    // Constructor :
     public SliderPreferenceCompat(Context context, AttributeSet attrs) {
 
         super(context,attrs);
@@ -49,12 +47,7 @@ public class SliderPreferenceCompat extends DialogPreference implements SeekBar.
         mDefault = attrs.getAttributeIntValue(androidns, "defaultValue", 220);
         mMax = attrs.getAttributeIntValue(androidns, "max", 1000);
     }
-    // ------------------------------------------------------------------------------------------
 
-
-
-    // ------------------------------------------------------------------------------------------
-    // DialogPreference methods :
     @Override
     protected View onCreateDialogView() {
 
@@ -106,12 +99,7 @@ public class SliderPreferenceCompat extends DialogPreference implements SeekBar.
         else
             mValue = (Integer)defaultValue;
     }
-    // ------------------------------------------------------------------------------------------
 
-
-
-    // ------------------------------------------------------------------------------------------
-    // OnSeekBarChangeListener methods :
     @Override
     public void onProgressChanged(SeekBar seek, int value, boolean fromTouch)
     {
@@ -133,12 +121,7 @@ public class SliderPreferenceCompat extends DialogPreference implements SeekBar.
             mSeekBar.setProgress(progress);
     }
     public int getProgress() { return mValue; }
-    // ------------------------------------------------------------------------------------------
 
-
-
-    // ------------------------------------------------------------------------------------------
-    // Set the positive button listener and onClick action :
     @Override
     public void showDialog(Bundle state) {
 
@@ -159,5 +142,5 @@ public class SliderPreferenceCompat extends DialogPreference implements SeekBar.
 
         ((AlertDialog) getDialog()).dismiss();
     }
-    // ---------------
+
 }
