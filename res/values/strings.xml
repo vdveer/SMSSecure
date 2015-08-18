@@ -631,6 +631,8 @@
     <string name="preferences__submit_debug_log">Submit debug log</string>
     <string name="preferences__support_wifi_calling">\'WiFi Calling\' compatibility mode</string>
     <string name="preferences__mms_size">MMS size limit</string>
+    <string name="preferences__mms_limit_image">MMS image resizing</string>
+    <string name="preferences__mms_limit_image_disc">Turn off if your carrier allows to send big pictures (>1MB)</string>
     <string name="preferences__preferences_mms_size_disc">Limit your MMS message size to your carriers needs</string>
     <string name="preferences__enable_if_your_device_supports_sms_mms_delivery_over_wifi">Enable if your device uses SMS/MMS delivery over WiFi (only enable when \'WiFi Calling\' is enabled on your device).</string>
     <string name="preferences__about">About SMSSecure</string>

@@ -52,9 +52,15 @@ public class ApplicationContext extends Application implements DependencyInjecto
 
   private JobManager jobManager;
   private ObjectGraph objectGraph;
+  private static Context context;
+
 
   public static ApplicationContext getInstance(Context context) {
-    return (ApplicationContext)context.getApplicationContext();
+    return (ApplicationContext) context.getApplicationContext();
+  }
+
+  public static Context get(){
+    return ApplicationContext.context;
   }
 
   @Override
@@ -63,11 +69,7 @@ public class ApplicationContext extends Application implements DependencyInjecto
     initializeLogging();
     initializeDependencyInjection();
     initializeJobManager();
-    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-    int kiloBytes = prefs.getInt("pref_mms_size", 220);
-    if(kiloBytes > 0)
-      MmsMediaConstraints.MAX_MESSAGE_SIZE = 1024 * kiloBytes;
+    ApplicationContext.context = getApplicationContext();
   }
 
   @Override

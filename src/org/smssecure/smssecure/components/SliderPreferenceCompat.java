@@ -152,7 +152,6 @@ public class SliderPreferenceCompat extends DialogPreference implements SeekBar.
     public void onClick(View v) {
 
         if (shouldPersist()) {
-
             mValue = mSeekBar.getProgress();
             persistInt(mSeekBar.getProgress());
             callChangeListener(Integer.valueOf(mSeekBar.getProgress()));

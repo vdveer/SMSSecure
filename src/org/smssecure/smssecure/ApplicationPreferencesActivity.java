@@ -130,12 +130,6 @@ public class ApplicationPreferencesActivity extends PassphraseRequiredActionBarA
       intent.setAction(KeyCachingService.LOCALE_CHANGE_EVENT);
       startService(intent);
     }
-    if(key.equals(SMSSecurePreferences.MMS_SIZE_PREF)){
-      int kb = sharedPreferences.getInt(SMSSecurePreferences.MMS_SIZE_PREF, 220);
-      if(kb > 0){
-        MmsMediaConstraints.MAX_MESSAGE_SIZE = 1024 * kb;
-      }
-    }
   }
 
   public static class ApplicationPreferenceFragment extends PreferenceFragment {
