@@ -40,7 +40,9 @@ import org.smssecure.smssecure.recipients.Recipients;
 import org.smssecure.smssecure.util.BitmapDecodingException;
 import org.smssecure.smssecure.util.MediaUtil;
 
+import java.io.File;
 import java.io.IOException;
+
 
 public class AttachmentManager {
   private final static String TAG = AttachmentManager.class.getSimpleName();
@@ -141,6 +143,19 @@ public class AttachmentManager {
   public static void selectContactInfo(Activity activity, int requestCode) {
     Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
     activity.startActivityForResult(intent, requestCode);
+  }
+
+  public static void selectFile(final Activity activity, int requestCode) {
+
+    new FileChooser(activity).setFileListener(new FileChooser.FileSelectedListener(){
+        @Override
+        public void fileSelected(final File file) {
+          int duration = Toast.LENGTH_SHORT;
+          Toast toast = Toast.makeText(activity.getApplicationContext(), "You selected " + file.getName() + " but I ignore files for know since it is work in progress", duration);
+          toast.show();
+        };
+    }).showDialog();
+
   }
 
   public Uri getCaptureUri() {
