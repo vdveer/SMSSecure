@@ -487,7 +487,8 @@ Importeer een niet-versleutelde back-up voor \'SMS Back-up En Herstellen\'.</str
   <string name="preferences__mms_size">MMS grootte</string>
   <string name="preferences__mms_limit_image">MMS foto\'s verkleinen</string>
   <string name="preferences__mms_limit_image_disc">Schakel uit wanneer je grote foto\'s wilt versturen en je provider dit toelaat (>1MB)</string>
-  <string name="preferences__preferences_mms_size_disc">Stel hier je maximale grootte in van een MMS bericht</string>
+  <string name="preferences__mms_size_disc">Stel hier je maximale grootte in van een MMS bericht</string>
+  <string name="preferences__mms_size_format">kB</string>
   <!--****************************************-->
   <!--menus-->
   <!--****************************************-->

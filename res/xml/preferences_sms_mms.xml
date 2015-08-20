@@ -53,7 +53,8 @@
         android:max="1000"
         android:key="pref_mms_size"
         android:title="@string/preferences__mms_size"
-        android:summary="@string/preferences__preferences_mms_size_disc"
+        android:text="@string/preferences__mms_size_format"
+        android:summary="@string/preferences__mms_size_disc"
         />
 
     <Preference android:key="pref_mms_preferences"
