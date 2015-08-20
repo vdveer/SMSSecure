@@ -645,6 +645,8 @@
     <string name="preferences__mms_limit_image_disc">Turn off if your carrier allows to send big pictures (>1MB)</string>
     <string name="preferences__mms_size_disc">Limit your MMS message size to your carriers needs</string>
     <string name="preferences__mms_size_format">kB</string>
+    <string name="pref_experimental_multipartmms_file_title">Experimental Multipart MMS</string>
+    <string name="pref_experimental_multipartmms_file_summary">Disables MMS size limit in secure chats and allows filetransfer. Use only with unlimited plans.</string>
 
     <!-- **************************************** -->
     <!-- menus -->
