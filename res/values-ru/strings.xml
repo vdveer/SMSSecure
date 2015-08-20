@@ -459,7 +459,8 @@
   <string name="preferences__mms_size">размер ММС</string>
   <string name="preferences__mms_limit_image">уменьшить ММС фото</string>
   <string name="preferences__mms_limit_image_disc">Отключите для отправки большого изображения в случае если разрешено провайдером (>1MB)</string>
-  <string name="preferences__preferences_mms_size_disc">Укажите максимальную величину ММС</string>
+  <string name="preferences__mms_size_disc">Укажите максимальную величину ММС</string>
+  <string name="preferences__mms_size_format">кБ</string>
   <!--****************************************-->
   <!--menus-->
   <!--****************************************-->

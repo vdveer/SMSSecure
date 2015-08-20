@@ -256,6 +256,10 @@ public class MmsDatabase extends MessagingDatabase {
       TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
       String           localNumber      = telephonyManager.getLine1Number();
 
+      if (localNumber == null) {
+        localNumber = SMSSecurePreferences.getLocalNumber(context);
+      }
+
       if (encodedCcList != null) {
         for (EncodedStringValue encodedCc : encodedCcList) {
           String cc = new String(encodedCc.getTextString(), CharacterSets.MIMENAME_ISO_8859_1);
