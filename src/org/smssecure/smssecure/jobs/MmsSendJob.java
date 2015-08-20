@@ -108,6 +108,7 @@ public class MmsSendJob extends SendJob {
   private byte[] getPduBytes(MasterSecret masterSecret, SendReq message)
       throws IOException, UndeliverableMessageException, InsecureFallbackApprovalException
   {
+    String number = TelephonyUtil.getManager(context).getLine1Number();
 
     message = getResolvedMessage(masterSecret, message, MediaConstraints.MMS_CONSTRAINTS, true);
     message.setBody(SmilUtil.getSmilBody(message.getBody()));
@@ -117,6 +118,9 @@ public class MmsSendJob extends SendJob {
       message        = getEncryptedMessage(masterSecret, message);
     }
 
+    if (number != null && number.trim().length() != 0) {
+      message.setFrom(new EncodedStringValue(number));
+    }
 
     byte[] pduBytes = new PduComposer(context, message).make();
     if (pduBytes == null) {
