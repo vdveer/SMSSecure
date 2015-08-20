@@ -109,6 +109,8 @@ public class MmsSendJob extends SendJob {
       throws IOException, UndeliverableMessageException, InsecureFallbackApprovalException
   {
 
+    String number = TelephonyUtil.getManager(context).getLine1Number();
+
     message = getResolvedMessage(masterSecret, message, MediaConstraints.MMS_CONSTRAINTS, true);
     message.setBody(SmilUtil.getSmilBody(message.getBody()));
 
