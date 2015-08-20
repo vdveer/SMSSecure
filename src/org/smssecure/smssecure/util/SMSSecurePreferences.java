@@ -79,6 +79,7 @@ public class SMSSecurePreferences {
   private static final String PUSH_REGISTRATION_REMINDER_PREF  = "pref_push_registration_reminder";
   private static final String RATING_LATER_PREF                = "pref_rating_later";
   private static final String RATING_ENABLED_PREF              = "pref_rating_enabled";
+  private static final String MULTIPART_MMS                    = "pref_experimental_multipartmms_file";
   public static final String NOTIFICATION_PRIVACY_PREF         = "pref_notification_privacy";
   public static final String MMS_SIZE_PREF                     = "pref_mms_size";
   public static final String LIMIT_IMAGE_SIZE_PREF             = "pref_limit_mms_image";
@@ -97,6 +98,10 @@ public class SMSSecurePreferences {
 
   public static boolean getLimitedMmsImageDimensions(Context context){
     return getBooleanPreference(context, LIMIT_IMAGE_SIZE_PREF, true);
+  }
+
+  public static boolean getMultipartMMS(Context context){
+    return getBooleanPreference(context, MULTIPART_MMS, false);
   }
 
   public static void setRatingLaterTimestamp(Context context, long timestamp) {

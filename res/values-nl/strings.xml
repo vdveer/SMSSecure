@@ -489,6 +489,9 @@ Importeer een niet-versleutelde back-up voor \'SMS Back-up En Herstellen\'.</str
   <string name="preferences__mms_limit_image_disc">Schakel uit wanneer je grote foto\'s wilt versturen en je provider dit toelaat (>1MB)</string>
   <string name="preferences__mms_size_disc">Stel hier je maximale grootte in van een MMS bericht</string>
   <string name="preferences__mms_size_format">kB</string>
+  <string name="pref_experimental_multipartmms_file_title">Experimenteel Multipart MMS</string>
+  <string name="pref_experimental_multipartmms_file_summary">Schakelt MMS limiet uit in secure chats en maakt bestandsoverdracht mogelijk. Gebruik enkel bij abonnement met onbeperkt MMSen.</string>
+
   <!--****************************************-->
   <!--menus-->
   <!--****************************************-->
