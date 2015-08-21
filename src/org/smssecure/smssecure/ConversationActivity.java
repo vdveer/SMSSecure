@@ -115,6 +115,7 @@ import org.smssecure.smssecure.util.concurrent.ListenableFuture;
 import org.smssecure.smssecure.util.concurrent.SettableFuture;
 import org.whispersystems.libaxolotl.InvalidMessageException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -275,23 +276,23 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     if (data == null && reqCode != TAKE_PHOTO || resultCode != RESULT_OK) return;
 
     switch (reqCode) {
-    case PICK_IMAGE:
-      addAttachmentImage(masterSecret, data.getData());
-      break;
-    case PICK_VIDEO:
-      addAttachmentVideo(data.getData());
-      break;
-    case PICK_AUDIO:
-      addAttachmentAudio(data.getData());
-      break;
-    case PICK_CONTACT_INFO:
-      addAttachmentContactInfo(data.getData());
-      break;
-    case TAKE_PHOTO:
-      if (attachmentManager.getCaptureUri() != null) {
-        addAttachmentImage(masterSecret, attachmentManager.getCaptureUri());
-      }
-      break;
+      case PICK_IMAGE:
+        addAttachmentImage(masterSecret, data.getData());
+        break;
+      case PICK_VIDEO:
+        addAttachmentVideo(data.getData());
+        break;
+      case PICK_AUDIO:
+        addAttachmentAudio(data.getData());
+        break;
+      case PICK_CONTACT_INFO:
+        addAttachmentContactInfo(data.getData());
+        break;
+      case TAKE_PHOTO:
+        if (attachmentManager.getCaptureUri() != null) {
+          addAttachmentImage(masterSecret, attachmentManager.getCaptureUri());
+        }
+        break;
     }
   }
 
@@ -876,7 +877,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     case AttachmentTypeSelectorAdapter.ADD_CONTACT_INFO:
       AttachmentManager.selectContactInfo(this, PICK_CONTACT_INFO); break;
     case AttachmentTypeSelectorAdapter.ADD_FILE:
-      AttachmentManager.selectFile(this, PICK_FILE); break;
+      attachmentManager.selectFile(this, PICK_FILE); break;
     case AttachmentTypeSelectorAdapter.TAKE_PHOTO:
       attachmentManager.capturePhoto(this, recipients, TAKE_PHOTO); break;
     }
@@ -930,6 +931,18 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
                                      (MmsMediaConstraints.getMaxMmsPref()/1024)),
                      Toast.LENGTH_LONG).show();
       Log.w("ComposeMessageActivity", e);
+    }
+  }
+
+  private void addAttachmentFile(File file){
+    try{
+      attachmentManager.setFile(file);
+    }catch (IOException ioe){
+      Toast.makeText(this,"Error attaching file...", Toast.LENGTH_LONG).show();
+      Log.w("ComposeMessageActivity", ioe);
+    }catch (MediaTooLargeException mtle){
+      Toast.makeText(this,"File too big with current settings...", Toast.LENGTH_LONG).show();
+      Log.w("ComposeMessageActivity", mtle);
     }
   }
 

@@ -32,6 +32,7 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.smssecure.smssecure.ConversationActivity;
 import org.smssecure.smssecure.R;
 import org.smssecure.smssecure.components.ThumbnailView;
 import org.smssecure.smssecure.crypto.MasterSecret;
@@ -107,6 +108,10 @@ public class AttachmentManager {
     setMedia(new AudioSlide(context, audio));
   }
 
+  public void setFile(File file) throws IOException, MediaTooLargeException {
+    setMedia(new FileSlide(context, file));
+  }
+
   public void setMedia(final Slide slide) {
     setMedia(slide, null);
   }
@@ -145,17 +150,22 @@ public class AttachmentManager {
     activity.startActivityForResult(intent, requestCode);
   }
 
-  public static void selectFile(final Activity activity, int requestCode) {
+  public void selectFile(final Activity activity, int requestCode) {
 
-    new FileChooser(activity).setFileListener(new FileChooser.FileSelectedListener(){
-        @Override
-        public void fileSelected(final File file) {
-          int duration = Toast.LENGTH_SHORT;
-          Toast toast = Toast.makeText(activity.getApplicationContext(), "You selected " + file.getName() + " but I ignore files for know since it is work in progress", duration);
-          toast.show();
-        };
+    new FileChooser(activity).setFileListener(new FileChooser.FileSelectedListener() {
+      @Override
+      public void fileSelected(final File file) {
+        try {
+          setFile(file);
+        } catch (IOException ioe) {
+          Toast.makeText(activity, "Error while attaching file", Toast.LENGTH_LONG).show();
+          Log.w("AttachmentManager", ioe);
+        } catch (MediaTooLargeException mtle) {
+          Toast.makeText(activity, "File is too large to be attached", Toast.LENGTH_LONG).show();
+          Log.w("AttachmentManager", mtle);
+        }
+      }
     }).showDialog();
-
   }
 
   public Uri getCaptureUri() {
