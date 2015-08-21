@@ -26,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.smssecure.smssecure.ApplicationContext;
 import org.smssecure.smssecure.R;
 import org.smssecure.smssecure.util.ResUtil;
 import org.smssecure.smssecure.util.SMSSecurePreferences;
@@ -82,8 +83,8 @@ public class AttachmentTypeSelectorAdapter extends ArrayAdapter<AttachmentTypeSe
     addItem(data, context.getString(R.string.AttachmentTypeSelectorAdapter_video),   ResUtil.getDrawableRes(context, R.attr.conversation_attach_video),        ADD_VIDEO);
     addItem(data, context.getString(R.string.AttachmentTypeSelectorAdapter_audio),   ResUtil.getDrawableRes(context, R.attr.conversation_attach_sound),        ADD_SOUND);
     addItem(data, context.getString(R.string.AttachmentTypeSelectorAdapter_contact), ResUtil.getDrawableRes(context, R.attr.conversation_attach_contact_info), ADD_CONTACT_INFO);
-    if(isEncryptedConversation && SMSSecurePreferences.getMultipartMMS(context)) //TODO: REMOVE NOT SIGN, WE WANT ONLY IN SECURE MMS
-      addItem(data, "Custom File", ResUtil.getDrawableRes(context, R.attr.conversation_attach), ADD_FILE);
+    if(SMSSecurePreferences.getMultipartMMS(context)) //TODO: add isEncryptedConversation check, WE WANT ONLY IN SECURE MMS
+      addItem(data, "File", ResUtil.getDrawableRes(context, R.attr.conversation_attach), ADD_FILE);
     return data;
   }
 
