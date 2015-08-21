@@ -48,7 +48,7 @@ public class SliderPreferenceCompat extends DialogPreference implements SeekBar.
         // Get string value for dialogMessage :
         int mSuffixId = attrs.getAttributeResourceValue(androidns, "text", 0);
         if(mSuffixId == 0) mSuffix = attrs.getAttributeValue(androidns, "text");
-        else mSuffix = mContext.getString(mDialogMessageId);
+        else mSuffix = mContext.getString(mSuffixId);
     }
 
     @Override
