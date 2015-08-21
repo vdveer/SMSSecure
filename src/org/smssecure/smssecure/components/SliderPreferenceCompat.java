@@ -44,7 +44,11 @@ public class SliderPreferenceCompat extends DialogPreference implements SeekBar.
         // Get default and max seekbar values :
         mDefault = attrs.getAttributeIntValue(androidns, "defaultValue", 220);
         mMax = attrs.getAttributeIntValue(androidns, "max", 1000);
-        mSuffix = attrs.getAttributeValue(androidns, "text");
+
+        // Get string value for dialogMessage :
+        int mSuffixId = attrs.getAttributeResourceValue(androidns, "text", 0);
+        if(mSuffixId == 0) mSuffix = attrs.getAttributeValue(androidns, "text");
+        else mSuffix = mContext.getString(mDialogMessageId);
     }
 
     @Override
