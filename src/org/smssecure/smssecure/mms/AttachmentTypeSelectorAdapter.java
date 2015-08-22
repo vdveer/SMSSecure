@@ -54,6 +54,8 @@ public class AttachmentTypeSelectorAdapter extends ArrayAdapter<AttachmentTypeSe
     return getItem(position).getCommand();
   }
 
+
+
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
     View view;

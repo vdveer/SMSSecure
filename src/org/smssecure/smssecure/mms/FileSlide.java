@@ -21,7 +21,6 @@ import android.content.res.Resources.Theme;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
 
-
 import org.smssecure.smssecure.R;
 import org.smssecure.smssecure.crypto.MasterSecret;
 import org.smssecure.smssecure.util.ResUtil;
@@ -65,7 +64,7 @@ public class FileSlide extends Slide {
     RandomAccessFile f = new RandomAccessFile(file, "r");
     byte[] fileData;
     try {
-      int length = (int) f.length());
+      int length = (int) f.length();
       fileData = new byte[length];
       f.readFully(fileData);
 
