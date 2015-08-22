@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.AlertDialogWrapper;
 import org.smssecure.smssecure.R;
 import org.smssecure.smssecure.crypto.MasterSecret;
 import org.smssecure.smssecure.mms.PartAuthority;
+import org.whispersystems.textsecure.internal.push.TextSecureProtos;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,6 +23,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
+
+import ws.com.google.android.mms.ContentType;
 
 public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTask.Attachment, Void, Integer> {
   private static final String TAG = SaveAttachmentTask.class.getSimpleName();
@@ -58,7 +61,7 @@ public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTa
         return FAILURE;
       }
 
-      File        mediaFile   = constructOutputFile(attachment.contentType, attachment.date);
+      File        mediaFile   = constructOutputFile(attachment);
       InputStream inputStream = PartAuthority.getPartStream(context, masterSecret, attachment.uri);
 
       if (inputStream == null) {
@@ -100,15 +103,15 @@ public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTa
     }
   }
 
-  private File constructOutputFile(String contentType, long timestamp) throws IOException {
+  private File constructOutputFile(Attachment attachement) throws IOException {
     File sdCard = Environment.getExternalStorageDirectory();
     File outputDirectory;
 
-    if (contentType.startsWith("video/")) {
+    if (attachement.contentType.startsWith("video/")) {
       outputDirectory = new File(sdCard.getAbsoluteFile() + File.separator + Environment.DIRECTORY_MOVIES);
-    } else if (contentType.startsWith("audio/")) {
+    } else if (attachement.contentType.startsWith("audio/")) {
       outputDirectory = new File(sdCard.getAbsolutePath() + File.separator + Environment.DIRECTORY_MUSIC);
-    } else if (contentType.startsWith("image/")) {
+    } else if (attachement.contentType.startsWith("image/")) {
       outputDirectory = new File(sdCard.getAbsolutePath() + File.separator + Environment.DIRECTORY_PICTURES);
     } else {
       outputDirectory = new File(sdCard.getAbsolutePath() + File.separator + Environment.DIRECTORY_DOWNLOADS);
@@ -116,20 +119,29 @@ public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTa
 
     if (!outputDirectory.mkdirs()) Log.w(TAG, "mkdirs() returned false, attempting to continue");
 
-    MimeTypeMap       mimeTypeMap   = MimeTypeMap.getSingleton();
-    String            extension     = mimeTypeMap.getExtensionFromMimeType(contentType);
-    SimpleDateFormat  dateFormatter = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
-    String            base          = "smssecure-" + dateFormatter.format(timestamp);
-
-    if (extension == null)
-      extension = "attach";
-
+    File file;
     int i = 0;
-    File file = new File(outputDirectory, base + "." + extension);
-    while (file.exists()) {
-      file = new File(outputDirectory, base + "-" + (++i) + "." + extension);
-    }
+    if(ContentType.isDrmType(attachement.contentType) && attachement.fileName != null){
+      String receivedFileName = new File(attachement.fileName).getName();
+      file = new File(outputDirectory, receivedFileName);
+      while(file.exists()){
+        file = new File(outputDirectory, receivedFileName + (++i));
+      }
+    }else {
+      MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+      String extension = mimeTypeMap.getExtensionFromMimeType(attachement.contentType);
+      SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
+      String base = "smssecure-" + dateFormatter.format(attachement.date);
 
+      if (extension == null)
+        extension = "attach";
+
+
+      file = new File(outputDirectory, base + "." + extension);
+      while (file.exists()) {
+        file = new File(outputDirectory, base + "-" + (++i) + "." + extension);
+      }
+    }
     return file;
   }
 
@@ -137,14 +149,16 @@ public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTa
     public Uri    uri;
     public String contentType;
     public long   date;
+    public String    fileName;
 
-    public Attachment(Uri uri, String contentType, long date) {
+    public Attachment(Uri uri, String contentType, long date, String fileName) {
       if (uri == null || contentType == null || date < 0) {
         throw new AssertionError("uri, content type, and date must all be specified");
       }
       this.uri         = uri;
       this.contentType = contentType;
       this.date        = date;
+      this.fileName     = fileName;
     }
   }
 
