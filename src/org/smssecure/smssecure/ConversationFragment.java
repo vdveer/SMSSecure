@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -295,8 +296,9 @@ public class ConversationFragment extends ListFragment
         message.fetchMediaSlide(new FutureTaskListener<Slide>() {
           @Override
           public void onSuccess(Slide slide) {
+            String receivedFileName = slide.getPart().getFilename();
             SaveAttachmentTask saveTask = new SaveAttachmentTask(getActivity(), masterSecret);
-            saveTask.execute(new Attachment(slide.getUri(), slide.getContentType(), message.getDateReceived()));
+            saveTask.execute(new Attachment(slide.getUri(), slide.getContentType(), message.getDateReceived(), receivedFileName));
           }
 
           @Override

@@ -47,20 +47,25 @@ public class FileSlide extends Slide {
   public boolean hasFile(){ return true; }
 
   @Override
+  public boolean hasImage() {
+    return true;
+  }
+
+  @Override
   public @DrawableRes int getPlaceholderRes(Theme theme) {
-    return ResUtil.getDrawableRes(context, R.attr.conversation_attach);
+    return ResUtil.getDrawableRes(theme, R.attr.conversation_attach);
   }
 
   public static PduPart constructPartFromUri(Context context, File file) throws IOException, MediaTooLargeException {
     PduPart part = new PduPart();
 
-    if(file.length() > MmsMediaConstraints.getMaxMmsPref()) //TODO: depend on filesetting or ignore size when implementing multipart.
+    if(file.length()> MmsMediaConstraints.getMaxMmsPref()) //TODO: depend on filesetting or ignore size when implementing multipart.
       throw new MediaTooLargeException();
 
     RandomAccessFile f = new RandomAccessFile(file, "r");
     byte[] fileData;
     try {
-      int length = (int) f.length();
+      int length = (int) f.length());
       fileData = new byte[length];
       f.readFully(fileData);
 
@@ -68,6 +73,7 @@ public class FileSlide extends Slide {
       f.close();
     }
     part.setDataUri(Uri.fromFile(file));
+    part.setFilename(file.getName().getBytes());
     part.setContentId((System.currentTimeMillis() + "").getBytes());
     part.setContentType(ContentType.APP_DRM_CONTENT.getBytes());
     part.setName((System.currentTimeMillis() + "").getBytes());
