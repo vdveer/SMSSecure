@@ -784,6 +784,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       public void onChange(TransportOption newTransport) {
         calculateCharactersRemaining();
         composeText.setTransport(newTransport);
+        attachmentAdapter = new AttachmentTypeSelectorAdapter(getApplicationContext(), (newTransport.isType(Type.SECURE_SMS)));
         buttonToggle.getBackground().setColorFilter(newTransport.getBackgroundColor(), Mode.MULTIPLY);
       }
     });
