@@ -30,6 +30,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.AlertDialogWrapper;
+import com.google.common.base.Charsets;
 
 import org.smssecure.smssecure.crypto.MasterSecret;
 import org.smssecure.smssecure.database.DatabaseFactory;
@@ -47,6 +48,7 @@ import org.smssecure.smssecure.util.SaveAttachmentTask;
 import org.smssecure.smssecure.util.SaveAttachmentTask.Attachment;
 import org.smssecure.smssecure.util.ServiceUtil;
 
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -296,7 +298,7 @@ public class ConversationFragment extends ListFragment
         message.fetchMediaSlide(new FutureTaskListener<Slide>() {
           @Override
           public void onSuccess(Slide slide) {
-            String receivedFileName = slide.getPart().getFilename();
+            String receivedFileName = new String(slide.getPart().getFilename());
             SaveAttachmentTask saveTask = new SaveAttachmentTask(getActivity(), masterSecret);
             saveTask.execute(new Attachment(slide.getUri(), slide.getContentType(), message.getDateReceived(), receivedFileName));
           }

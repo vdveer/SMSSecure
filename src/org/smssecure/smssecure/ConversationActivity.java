@@ -698,6 +698,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     } else {
       this.isEncryptedConversation = false;
     }
+    attachmentAdapter = new AttachmentTypeSelectorAdapter(this, isSecureSmsDestination);
 
     sendButton.resetAvailableTransports(isMediaMessage);
     if (!isSecureSmsDestination      ) sendButton.disableTransport(Type.SECURE_SMS);
