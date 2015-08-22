@@ -698,7 +698,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     } else {
       this.isEncryptedConversation = false;
     }
-    attachmentAdapter = new AttachmentTypeSelectorAdapter(this, isSecureSmsDestination);
+    attachmentAdapter.setSecureDestination(isSecureSmsDestination);
 
     sendButton.resetAvailableTransports(isMediaMessage);
     if (!isSecureSmsDestination      ) sendButton.disableTransport(Type.SECURE_SMS);
@@ -784,7 +784,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       public void onChange(TransportOption newTransport) {
         calculateCharactersRemaining();
         composeText.setTransport(newTransport);
-        attachmentAdapter = new AttachmentTypeSelectorAdapter(getApplicationContext(), (newTransport.isType(Type.SECURE_SMS)));
+        attachmentAdapter.setSecureDestination((newTransport.isType(Type.SECURE_SMS)));
         buttonToggle.getBackground().setColorFilter(newTransport.getBackgroundColor(), Mode.MULTIPLY);
       }
     });

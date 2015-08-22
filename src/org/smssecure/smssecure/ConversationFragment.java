@@ -298,7 +298,7 @@ public class ConversationFragment extends ListFragment
         message.fetchMediaSlide(new FutureTaskListener<Slide>() {
           @Override
           public void onSuccess(Slide slide) {
-            String receivedFileName = new String(slide.getPart().getFilename());
+            String receivedFileName = slide.getPart().getFilename() != null ? new String(slide.getPart().getFilename()) : null;
             SaveAttachmentTask saveTask = new SaveAttachmentTask(getActivity(), masterSecret);
             saveTask.execute(new Attachment(slide.getUri(), slide.getContentType(), message.getDateReceived(), receivedFileName));
           }

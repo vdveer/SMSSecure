@@ -42,6 +42,7 @@ public class AttachmentTypeSelectorAdapter extends ArrayAdapter<AttachmentTypeSe
   public static final int ADD_CONTACT_INFO  = 4;
   public static final int TAKE_PHOTO        = 5;
   public static final int ADD_FILE          = 6;
+  public static IconListItem fileIdentifier;
 
   private final Context context;
 
@@ -83,13 +84,26 @@ public class AttachmentTypeSelectorAdapter extends ArrayAdapter<AttachmentTypeSe
     }
     addItem(data, context.getString(R.string.AttachmentTypeSelectorAdapter_picture), ResUtil.getDrawableRes(context, R.attr.conversation_attach_image),        ADD_IMAGE);
     addItem(data, context.getString(R.string.AttachmentTypeSelectorAdapter_video),   ResUtil.getDrawableRes(context, R.attr.conversation_attach_video),        ADD_VIDEO);
-    addItem(data, context.getString(R.string.AttachmentTypeSelectorAdapter_audio),   ResUtil.getDrawableRes(context, R.attr.conversation_attach_sound),        ADD_SOUND);
+    addItem(data, context.getString(R.string.AttachmentTypeSelectorAdapter_audio), ResUtil.getDrawableRes(context, R.attr.conversation_attach_sound), ADD_SOUND);
     addItem(data, context.getString(R.string.AttachmentTypeSelectorAdapter_contact), ResUtil.getDrawableRes(context, R.attr.conversation_attach_contact_info), ADD_CONTACT_INFO);
-    if(isEncryptedConversation && SMSSecurePreferences.getMultipartMMS(context)) //TODO: add isEncryptedConversation check, WE WANT ONLY IN SECURE MMS
-      addItem(data, "File", ResUtil.getDrawableRes(context, R.attr.conversation_attach), ADD_FILE);
+    if(isEncryptedConversation && SMSSecurePreferences.getMultipartMMS(context)) { //TODO: add isEncryptedConversation check, WE WANT ONLY IN SECURE MMS
+      if (fileIdentifier == null)
+        fileIdentifier = new IconListItem("File", ResUtil.getDrawableRes(context, R.attr.conversation_attach), ADD_FILE);
+      data.add(fileIdentifier);
+    }
     return data;
   }
 
+
+  public void setSecureDestination(boolean isSecure){
+    if(fileIdentifier == null)
+      fileIdentifier = new IconListItem("File", ResUtil.getDrawableRes(context, R.attr.conversation_attach), ADD_FILE);
+    if(isSecure && getPosition(fileIdentifier) == -1) {
+      add(fileIdentifier);
+    }
+    else if(!isSecure && getPosition(fileIdentifier) >= 0)
+      remove(fileIdentifier);
+  }
   private static void addItem(List<IconListItem> list, String text, int resource, int id) {
     list.add(new IconListItem(text, resource, id));
   }
