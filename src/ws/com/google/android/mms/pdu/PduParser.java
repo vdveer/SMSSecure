@@ -766,6 +766,12 @@ public class PduParser {
             if (null != name) {
                 part.setName(name);
             }
+            
+            // filname 
+            byte[] filename = (byte[]) map.get(PduPart.P_FILENAME);
+            if (null != filename) {
+                part.setFilename(filename);
+            }
 
             /* get charset parameter */
             Integer charset = (Integer) map.get(PduPart.P_CHARSET);
