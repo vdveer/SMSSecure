@@ -949,6 +949,11 @@ public class PduComposer {
             appendOctet(PduPart.P_DEP_NAME);
             appendTextString(name);
 
+            if(part.getFilename() != null) {
+                appendOctet(PduPart.P_FILENAME);
+                appendTextString(part.getFilename());
+            }
+
             // content-type parameter : charset
             int charset = part.getCharset();
             if (charset != 0) {
