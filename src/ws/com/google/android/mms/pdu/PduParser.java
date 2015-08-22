@@ -766,12 +766,6 @@ public class PduParser {
             if (null != name) {
                 part.setName(name);
             }
-            
-            // filname 
-            byte[] filename = (byte[]) map.get(PduPart.P_FILENAME);
-            if (null != filename) {
-                part.setFilename(filename);
-            }
 
             /* get charset parameter */
             Integer charset = (Integer) map.get(PduPart.P_CHARSET);
@@ -1623,6 +1617,14 @@ public class PduParser {
                             tempPos = pduDataStream.available();
                             lastLen = length - (startPos - tempPos);
                         }
+                        break;
+                    case PduPart.P_FILENAME:
+                        // filname
+                        byte[] filename = parseWapString(pduDataStream, TYPE_TEXT_STRING);
+                        if (null != filename) {
+                            part.setFilename(filename);
+                        }
+
                         break;
                     default:
                         if (LOCAL_LOGV) {
