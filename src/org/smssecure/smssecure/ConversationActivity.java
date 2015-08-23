@@ -634,13 +634,26 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     Uri    draftImage = getIntent().getParcelableExtra(DRAFT_IMAGE_EXTRA);
     Uri    draftAudio = getIntent().getParcelableExtra(DRAFT_AUDIO_EXTRA);
     Uri    draftVideo = getIntent().getParcelableExtra(DRAFT_VIDEO_EXTRA);
-    File    draftFile  = getIntent().getParcelableExtra(DRAFT_FILE_EXTRA);
+    Uri    draftFile  = getIntent().getParcelableExtra(DRAFT_FILE_EXTRA);
 
     if (draftText != null)  composeText.setText(draftText);
     if (draftImage != null) addAttachmentImage(masterSecret, draftImage);
     if (draftAudio != null) addAttachmentAudio(draftAudio);
     if (draftVideo != null) addAttachmentVideo(draftVideo);
-    if (draftFile != null)  addAttachmentFile(draftFile);
+    if (draftFile != null){
+      if(isEncryptedConversation) {
+        Toast.makeText(this, R.string.ConversationActivity_sorry_no_files_attaching_on_insecure_chat,
+                Toast.LENGTH_LONG).show();
+      }else {
+        try {
+          addAttachmentFile(new File(new URI(draftFile.toString())));
+        } catch (Exception use) {
+          Log.w("AttachmentDraft", "Could not match URI to file, ignoring attachment");
+          Toast.makeText(this, R.string.ConversationActivity_sorry_there_was_an_error_setting_your_attachment,
+                  Toast.LENGTH_LONG).show();
+        }
+      }
+    }
 
     if (draftText == null && draftImage == null && draftAudio == null && draftVideo == null && draftFile == null) {
       initializeDraftFromDatabase();
