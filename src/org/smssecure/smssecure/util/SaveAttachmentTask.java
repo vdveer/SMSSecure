@@ -6,6 +6,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import android.util.Pair;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
@@ -26,7 +27,7 @@ import java.text.SimpleDateFormat;
 
 import ws.com.google.android.mms.ContentType;
 
-public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTask.Attachment, Void, Integer> {
+public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTask.Attachment, Void, Pair<Integer, String>> {
   private static final String TAG = SaveAttachmentTask.class.getSimpleName();
 
   private static final int SUCCESS              = 0;
@@ -43,7 +44,7 @@ public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTa
   }
 
   @Override
-  protected Integer doInBackground(SaveAttachmentTask.Attachment... attachments) {
+  protected Pair<Integer, String> doInBackground(SaveAttachmentTask.Attachment... attachments) {
     if (attachments == null || attachments.length != 1 || attachments[0] == null) {
       throw new AssertionError("must pass in exactly one attachment");
     }
@@ -54,18 +55,18 @@ public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTa
       MasterSecret masterSecret = masterSecretReference.get();
 
       if (!Environment.getExternalStorageDirectory().canWrite()) {
-        return WRITE_ACCESS_FAILURE;
+        return new Pair<Integer, String>(WRITE_ACCESS_FAILURE, null);
       }
 
       if (context == null) {
-        return FAILURE;
+        return new Pair<Integer, String>(WRITE_ACCESS_FAILURE, null);
       }
 
       File        mediaFile   = constructOutputFile(attachment);
       InputStream inputStream = PartAuthority.getPartStream(context, masterSecret, attachment.uri);
 
       if (inputStream == null) {
-        return FAILURE;
+        return new Pair<Integer, String>(WRITE_ACCESS_FAILURE, null);
       }
 
       OutputStream outputStream = new FileOutputStream(mediaFile);
@@ -74,26 +75,26 @@ public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTa
       MediaScannerConnection.scanFile(context, new String[]{mediaFile.getAbsolutePath()},
                                       new String[]{attachment.contentType}, null);
 
-      return SUCCESS;
+      return new Pair<Integer, String>(SUCCESS, mediaFile.getAbsolutePath());
     } catch (IOException ioe) {
       Log.w(TAG, ioe);
-      return FAILURE;
+      return new Pair<Integer, String>(WRITE_ACCESS_FAILURE, null);
     }
   }
 
   @Override
-  protected void onPostExecute(Integer result) {
+  protected void onPostExecute(Pair<Integer,String> result) {
     super.onPostExecute(result);
     Context context = contextReference.get();
     if (context == null) return;
 
-    switch (result) {
+    switch (result.first) {
       case FAILURE:
         Toast.makeText(context, R.string.ConversationFragment_error_while_saving_attachment_to_sd_card,
             Toast.LENGTH_LONG).show();
         break;
       case SUCCESS:
-        Toast.makeText(context, R.string.ConversationFragment_success_exclamation,
+        Toast.makeText(context, R.string.ConversationFragment_success_exclamation + (null != result.second ? " ["+result.second+"]" : ""),
             Toast.LENGTH_LONG).show();
         break;
       case WRITE_ACCESS_FAILURE:
