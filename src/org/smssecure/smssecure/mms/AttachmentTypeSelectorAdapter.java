@@ -98,10 +98,10 @@ public class AttachmentTypeSelectorAdapter extends ArrayAdapter<AttachmentTypeSe
   public void setSecureDestination(boolean isSecure){
     if(fileIdentifier == null)
       fileIdentifier = new IconListItem("File", ResUtil.getDrawableRes(context, R.attr.conversation_attach), ADD_FILE);
-    if(isSecure && getPosition(fileIdentifier) == -1) {
+    if(isSecure && getPosition(fileIdentifier) == -1 && SMSSecurePreferences.getMultipartMMS(context)) {
       add(fileIdentifier);
     }
-    else if(!isSecure && getPosition(fileIdentifier) >= 0)
+    else if((!isSecure || !SMSSecurePreferences.getMultipartMMS(context)) && getPosition(fileIdentifier) >= 0)
       remove(fileIdentifier);
   }
   private static void addItem(List<IconListItem> list, String text, int resource, int id) {
