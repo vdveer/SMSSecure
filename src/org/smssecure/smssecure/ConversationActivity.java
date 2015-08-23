@@ -641,7 +641,10 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     if (draftAudio != null) addAttachmentAudio(draftAudio);
     if (draftVideo != null) addAttachmentVideo(draftVideo);
     if (draftFile != null){
-      if(isEncryptedConversation) {
+      Recipient    primaryRecipient       = getRecipients() == null ? null : getRecipients().getPrimaryRecipient();
+      boolean      isSecureSmsDestination = isSingleConversation() &&
+              SessionUtil.hasSession(this, masterSecret, primaryRecipient);
+      if(!isSecureSmsDestination) {
         Toast.makeText(this, R.string.ConversationActivity_sorry_no_files_attaching_on_insecure_chat,
                 Toast.LENGTH_LONG).show();
       }else {
