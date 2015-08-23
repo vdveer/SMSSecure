@@ -90,6 +90,14 @@ public class SlideDeck {
     return false;
   }
 
+  public void removeFileSlides() {
+    for (Slide slide : slides) {
+      if (slide.hasFile()) {
+        slides.remove(slide);
+      }
+    }
+  }
+
   public @Nullable Slide getThumbnailSlide() {
     for (Slide slide : slides) {
       if (slide.hasImage()) {
