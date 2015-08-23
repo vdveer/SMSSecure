@@ -85,6 +85,10 @@ public class AttachmentManager {
     attachmentView.startAnimation(animation);
   }
 
+  public void removeFileSlides(){
+    slideDeck.removeFileSlides();
+  }
+
   public void cleanup() {
     if (captureUri != null) CaptureProvider.getInstance(context).delete(captureUri);
     captureUri = null;

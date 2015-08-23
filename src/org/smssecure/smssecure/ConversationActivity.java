@@ -785,7 +785,10 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
         calculateCharactersRemaining();
         composeText.setTransport(newTransport);
         attachmentAdapter.setSecureDestination((newTransport.isType(Type.SECURE_SMS)));
-        buttonToggle.getBackground().setColorFilter(newTransport.getBackgroundColor(), Mode.MULTIPLY);
+        if(newTransport.isType(Type.INSECURE_SMS)) {
+          attachmentManager.removeFileSlides();
+        }
+                buttonToggle.getBackground().setColorFilter(newTransport.getBackgroundColor(), Mode.MULTIPLY);
       }
     });
 
