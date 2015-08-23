@@ -85,9 +85,12 @@ public class AttachmentManager {
     attachmentView.startAnimation(animation);
   }
 
-  public void removeFileSlides(){
-    slideDeck.removeFileSlides();
-    attachmentListener.onAttachmentChanged();
+  public void clearIfFileSlides(){
+    if(slideDeck.hasFileSlide()) {
+      slideDeck.clear();
+      attachmentView.setVisibility(View.GONE);
+      attachmentListener.onAttachmentChanged();
+    }
   }
 
   public void cleanup() {

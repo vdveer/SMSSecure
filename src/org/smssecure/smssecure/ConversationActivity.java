@@ -117,6 +117,8 @@ import org.whispersystems.libaxolotl.InvalidMessageException;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.smssecure.smssecure.TransportOption.Type;
@@ -478,7 +480,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
       @Override
       public void onClick(DialogInterface dialog, int which) {
-        if (!isEncryptedConversation){
+        if (!isEncryptedConversation) {
           KeyExchangeInitiator.initiate(ConversationActivity.this, masterSecret, recipients, true);
         }
       }
@@ -678,8 +680,11 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
           } else if (draft.getType().equals(Draft.VIDEO)) {
             addAttachmentVideo(Uri.parse(draft.getValue()));
           } else if(draft.getType().equals(Draft.FILE)) {
-            Log.w("AttachmentFile", "added draft file: " + draft.getValue());
-            addAttachmentFile(new File(draft.getValue()));
+            try {
+              addAttachmentFile(new File(new URI(draft.getValue())));
+            }catch (Exception use){
+              Log.w("AttachmentDraft", "Could not match URI to file, ignoring attachment");
+            }
           }
         }
 
@@ -787,9 +792,9 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
         composeText.setTransport(newTransport);
         attachmentAdapter.setSecureDestination((newTransport.isType(Type.SECURE_SMS)));
         if(newTransport.isType(Type.INSECURE_SMS)) {
-          attachmentManager.removeFileSlides();
+          attachmentManager.clearIfFileSlides();
         }
-                buttonToggle.getBackground().setColorFilter(newTransport.getBackgroundColor(), Mode.MULTIPLY);
+        buttonToggle.getBackground().setColorFilter(newTransport.getBackgroundColor(), Mode.MULTIPLY);
       }
     });
 
