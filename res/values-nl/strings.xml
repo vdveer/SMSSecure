@@ -97,7 +97,7 @@ Let op, dit schakelt opslagversleuteling uit voor alle berichten en sleutels. Je
   <string name="ConversationFragment_save_to_sd_card">Opslaan?</string>
   <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Het opslaan van dit mediabestand maakt het toegankelijke voor alle apps op je telefoon.t.\n\nDoorgaan?</string>
   <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Fout tijdens het opslaan van de bijlage!</string>
-  <string name="ConversationFragment_success_exclamation">Succesvol!</string>
+  <string name="ConversationFragment_success_exclamation">Bestand succesvol opgeslagen!</string>
   <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Opslag niet beschrijfbaar!</string>
   <string name="ConversationFragment_saving_attachment">Bijlage opslaan</string>
   <string name="ConversationFragment_saving_attachment_to_sd_card">Bijlage aan het opslaan...</string>

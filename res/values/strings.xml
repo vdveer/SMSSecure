@@ -111,7 +111,7 @@
     <string name="ConversationFragment_save_to_sd_card">Save to storage?</string>
     <string name="ConversationFragment_this_media_has_been_stored_in_an_encrypted_database_warning">Saving this attachment to storage will allow any other apps on your phone to access it.\n\nContinue?</string>
     <string name="ConversationFragment_error_while_saving_attachment_to_sd_card">Error while saving attachment to storage!</string>
-    <string name="ConversationFragment_success_exclamation">Success!</string>
+    <string name="ConversationFragment_success_exclamation">Succesfully saved file!</string>
     <string name="ConversationFragment_unable_to_write_to_sd_card_exclamation">Unable to write to storage!</string>
     <string name="ConversationFragment_saving_attachment">Saving attachment</string>
     <string name="ConversationFragment_saving_attachment_to_sd_card">Saving attachment to storage...</string>
