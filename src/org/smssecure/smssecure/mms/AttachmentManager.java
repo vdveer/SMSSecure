@@ -87,6 +87,7 @@ public class AttachmentManager {
 
   public void removeFileSlides(){
     slideDeck.removeFileSlides();
+    attachmentListener.onAttachmentChanged();
   }
 
   public void cleanup() {

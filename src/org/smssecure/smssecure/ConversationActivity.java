@@ -678,6 +678,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
           } else if (draft.getType().equals(Draft.VIDEO)) {
             addAttachmentVideo(Uri.parse(draft.getValue()));
           } else if(draft.getType().equals(Draft.FILE)) {
+            Log.w("AttachmentFile", "added draft file: " + draft.getValue());
             addAttachmentFile(new File(draft.getValue()));
           }
         }
@@ -1000,8 +1001,8 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     for (Slide slide : attachmentManager.getSlideDeck().getSlides()) {
       if      (slide.hasAudio()) drafts.add(new Draft(Draft.AUDIO, slide.getUri().toString()));
       else if (slide.hasVideo()) drafts.add(new Draft(Draft.VIDEO, slide.getUri().toString()));
-      else if (slide.hasImage()) drafts.add(new Draft(Draft.IMAGE, slide.getUri().toString()));
       else if (slide.hasFile()) drafts.add(new Draft(Draft.FILE, slide.getUri().toString()));
+      else if (slide.hasImage()) drafts.add(new Draft(Draft.IMAGE, slide.getUri().toString()));
     }
 
     return drafts;
