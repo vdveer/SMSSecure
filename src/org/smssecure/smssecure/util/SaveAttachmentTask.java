@@ -94,7 +94,7 @@ public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTa
             Toast.LENGTH_LONG).show();
         break;
       case SUCCESS:
-        Toast.makeText(context, R.string.ConversationFragment_success_exclamation + (null != result.second ? " ["+result.second+"]" : ""),
+        Toast.makeText(context, context.getResources().getText(R.string.ConversationFragment_success_exclamation) + (null != result.second ? " [" + result.second + "]" : ""),
             Toast.LENGTH_LONG).show();
         break;
       case WRITE_ACCESS_FAILURE:
