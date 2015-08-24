@@ -17,9 +17,14 @@
 package org.smssecure.smssecure.mms;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.content.res.Resources.Theme;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
+import android.util.Log;
+
+import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import org.smssecure.smssecure.R;
 import org.smssecure.smssecure.crypto.MasterSecret;
@@ -28,37 +33,45 @@ import org.smssecure.smssecure.util.ResUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.regex.Pattern;
 
 import ws.com.google.android.mms.ContentType;
 import ws.com.google.android.mms.pdu.PduPart;
 
 public class FileSlide extends Slide {
 
-  public FileSlide(Context context, File file) throws IOException, MediaTooLargeException {
-    super(context, constructPartFromUri(context, file));
+  private boolean multiPart = false;
+
+  public FileSlide(Context context, File file, boolean multiPart) throws IOException, MediaTooLargeException {
+    super(context, constructPartFromUri(context, file, multiPart));
+    if(file.length() > MmsMediaConstraints.getMaxMmsPref())
+      this.multiPart = multiPart;
   }
 
   public FileSlide(Context context, MasterSecret masterSecret, PduPart part) {
     super(context, masterSecret, part);
+    multiPart = part.getFilename() != null ? Pattern.compile(".+@[0-9]{1,3}\\/[0-9]{1,3}").matcher(new String(part.getFilename())).matches() : false;// check for @ / string
+    Log.w("FileRegex", "Multipart .+@[0-9]{1,3}\\/[0-9]{1,3}: " + (multiPart ? "matches" : "does not match"));
   }
 
   @Override
   public boolean hasFile(){ return true; }
 
   @Override
-  public boolean hasImage() {
-    return true;
-  }
+  public boolean hasImage() { return true; }
+
+  @Override
+  public boolean isMultipart() { return multiPart; };
 
   @Override
   public @DrawableRes int getPlaceholderRes(Theme theme) {
     return ResUtil.getDrawableRes(theme, R.attr.conversation_attach);
   }
 
-  public static PduPart constructPartFromUri(Context context, File file) throws IOException, MediaTooLargeException {
+  public static PduPart constructPartFromUri(Context context, File file, boolean allowMultipart) throws IOException, MediaTooLargeException {
     PduPart part = new PduPart();
 
-    if(file.length()> MmsMediaConstraints.getMaxMmsPref()) //TODO: depend on filesetting or ignore size when implementing multipart.
+    if(file.length()> MmsMediaConstraints.getMaxMmsPref() && !allowMultipart) //TODO: depend on filesetting or ignore size when implementing multipart.
       throw new MediaTooLargeException();
 
     RandomAccessFile f = new RandomAccessFile(file, "r");
@@ -78,5 +91,16 @@ public class FileSlide extends Slide {
     part.setName((System.currentTimeMillis() + "").getBytes());
     part.setData(fileData);
     return part;
+  }
+
+  public static void showWarningDialog(Context context, DialogInterface.OnClickListener onAcceptListener, String numberOfParts) {
+    AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
+    builder.setTitle(R.string.multipart_mms_question_title);
+    builder.setIconAttribute(R.attr.dialog_alert_icon);
+    builder.setCancelable(true);
+    builder.setMessage(context.getResources().getString(R.string.multipart_mms_question_message) + numberOfParts);
+    builder.setPositiveButton(R.string.yes, onAcceptListener);
+    builder.setNegativeButton(R.string.no, null);
+    builder.show();
   }
 }

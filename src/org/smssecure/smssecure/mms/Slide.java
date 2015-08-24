@@ -68,6 +68,8 @@ public abstract class Slide {
 
   public boolean hasFile(){ return false; }
 
+  public boolean isMultipart() { return false; }
+
   public PduPart getPart() {
     return part;
   }

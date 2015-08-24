@@ -19,6 +19,7 @@ package org.smssecure.smssecure.mms;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -39,13 +40,18 @@ import org.smssecure.smssecure.crypto.MasterSecret;
 import org.smssecure.smssecure.providers.CaptureProvider;
 import org.smssecure.smssecure.recipients.Recipients;
 import org.smssecure.smssecure.util.BitmapDecodingException;
+import org.smssecure.smssecure.util.FutureTaskListener;
 import org.smssecure.smssecure.util.MediaUtil;
+import org.smssecure.smssecure.util.SMSSecurePreferences;
+import org.smssecure.smssecure.util.SaveAttachmentTask;
 
 import java.io.File;
 import java.io.IOException;
 
+import de.greenrobot.event.util.ErrorDialogManager;
 
-public class AttachmentManager {
+
+public class AttachmentManager implements DialogInterface.OnClickListener{
   private final static String TAG = AttachmentManager.class.getSimpleName();
 
   private final Context            context;
@@ -54,6 +60,7 @@ public class AttachmentManager {
   private final ImageView          removeButton;
   private final SlideDeck          slideDeck;
   private final AttachmentListener attachmentListener;
+  private File                     file;
 
   private Uri captureUri;
 
@@ -64,7 +71,6 @@ public class AttachmentManager {
     this.slideDeck          = new SlideDeck();
     this.context            = view;
     this.attachmentListener = listener;
-
     this.removeButton.setOnClickListener(new RemoveButtonListener());
   }
 
@@ -116,8 +122,15 @@ public class AttachmentManager {
     setMedia(new AudioSlide(context, audio));
   }
 
-  public void setFile(File file) throws IOException, MediaTooLargeException {
-    setMedia(new FileSlide(context, file));
+  public void setFile(final File file) throws IOException, MediaTooLargeException {
+
+    if(file.length() > MmsMediaConstraints.getMaxMmsPref() && SMSSecurePreferences.getMultipartMMS(context)){
+      this.file = file;
+      String numberOfParts = String.valueOf((file.length()+1)/MmsMediaConstraints.getMaxMmsPref()) + 1;
+      FileSlide.showWarningDialog(context, this, numberOfParts);
+    }else {
+      setMedia(new FileSlide(context, file, false));
+    }
   }
 
   public void setMedia(final Slide slide) {
@@ -136,6 +149,14 @@ public class AttachmentManager {
     return attachmentView.getVisibility() == View.VISIBLE;
   }
 
+  @Override
+  public void onClick(DialogInterface dialog, int which) {
+    try {
+      setMedia(new FileSlide(context, file, true));
+    } catch (IOException|MediaTooLargeException e) {
+      Log.w("AttachmentManager", e);
+      Toast.makeText(context, "Error while attaching file", Toast.LENGTH_LONG).show();
+    }}
 
   public SlideDeck getSlideDeck() {
     return slideDeck;
