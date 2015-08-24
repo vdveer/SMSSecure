@@ -947,7 +947,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       attachmentManager.clear();
 
       Toast.makeText(this, getString(R.string.ConversationActivity_sorry_the_selected_video_exceeds_message_size_restrictions,
-                                     (MmsMediaConstraints.getMaxMmsPref()/1024)),
+                                     (MmsMediaConstraints.MAX_MESSAGE_SIZE/1024)),
                      Toast.LENGTH_LONG).show();
       Log.w("ComposeMessageActivity", e);
     }
@@ -964,7 +964,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     } catch (MediaTooLargeException e) {
       attachmentManager.clear();
       Toast.makeText(this, getString(R.string.ConversationActivity_sorry_the_selected_audio_exceeds_message_size_restrictions,
-                                     (MmsMediaConstraints.getMaxMmsPref()/1024)),
+                                     (MmsMediaConstraints.MAX_MESSAGE_SIZE/1024)),
                      Toast.LENGTH_LONG).show();
       Log.w("ComposeMessageActivity", e);
     }

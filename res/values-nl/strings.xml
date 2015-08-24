@@ -484,13 +484,8 @@ Importeer een niet-versleutelde back-up voor \'SMS Back-up En Herstellen\'.</str
   <string name="preferences__about">Over SMSSecure</string>
   <string name="preferences__about_version">Versie %s</string>
   <string name="preferences__about_build_id">Build ID: %s</string>
-  <string name="preferences__mms_size">MMS grootte</string>
-  <string name="preferences__mms_limit_image">MMS foto\'s verkleinen</string>
-  <string name="preferences__mms_limit_image_disc">Schakel uit wanneer je grote foto\'s wilt versturen en je provider dit toelaat (>1MB)</string>
-  <string name="preferences__mms_size_disc">Stel hier je maximale grootte in van een MMS bericht</string>
-  <string name="preferences__mms_size_format">kB</string>
-  <string name="pref_experimental_multipartmms_file_title">Experimenteel Multipart MMS</string>
-  <string name="pref_experimental_multipartmms_file_summary">Schakelt MMS limiet uit in secure chats en maakt bestandsoverdracht mogelijk. Gebruik enkel bij abonnement met onbeperkt MMSen.</string>
+  <string name="pref_experimental_multipartmms_file_title">Bestandsoverdacht in beveiligde MMS</string>
+  <string name="pref_experimental_multipartmms_file_summary">Maakt bestandsoverdracht mogelijk in beveiligde conversaties. Maximale bestandsgrootte is het MMS limiet (280kb).</string>
 
   <!--****************************************-->
   <!--menus-->

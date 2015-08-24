@@ -58,7 +58,7 @@ public class FileSlide extends Slide {
   public static PduPart constructPartFromUri(Context context, File file) throws IOException, MediaTooLargeException {
     PduPart part = new PduPart();
 
-    if(file.length()> MmsMediaConstraints.getMaxMmsPref()) //TODO: depend on filesetting or ignore size when implementing multipart.
+    if(file.length()> MmsMediaConstraints.MAX_MESSAGE_SIZE) //TODO: depend on filesetting or ignore size when implementing multipart.
       throw new MediaTooLargeException();
 
     RandomAccessFile f = new RandomAccessFile(file, "r");
