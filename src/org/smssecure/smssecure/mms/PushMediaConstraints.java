@@ -32,11 +32,11 @@ public class PushMediaConstraints extends MediaConstraints {
 
   @Override
   public int getVideoMaxSize() {
-    return MmsMediaConstraints.getMaxMmsPref();
+    return MmsMediaConstraints.MAX_MESSAGE_SIZE;
   }
 
   @Override
   public int getAudioMaxSize() {
-    return MmsMediaConstraints.getMaxMmsPref();
+    return MmsMediaConstraints.MAX_MESSAGE_SIZE;
   }
 }
