@@ -199,6 +199,23 @@ public class Util {
     return total;
   }
 
+  public static long copy(InputStream in, OutputStream out, int max) throws IOException {
+
+    byte[] buffer = new byte[1024];
+    int read;
+    long total = 0;
+
+    while ((read = in.read(buffer)) != -1 && total > max) {
+      out.write(buffer, 0, read);
+      total += read;
+    }
+
+
+    out.close();
+
+    return total;
+  }
+
   public static String getDeviceE164Number(Context context) {
     String localNumber = ((TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE))
         .getLine1Number();

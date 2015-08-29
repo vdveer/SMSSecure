@@ -3,6 +3,7 @@ package org.smssecure.smssecure.crypto;
 import android.content.Context;
 import android.util.Log;
 
+import org.smssecure.smssecure.mms.FileSlide;
 import org.smssecure.smssecure.mms.TextTransport;
 import org.smssecure.smssecure.protocol.WirePrefix;
 import org.smssecure.smssecure.recipients.RecipientFormattingException;
@@ -21,6 +22,9 @@ import org.whispersystems.libaxolotl.util.guava.Optional;
 import org.whispersystems.textsecure.api.push.TextSecureAddress;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import ws.com.google.android.mms.ContentType;
 import ws.com.google.android.mms.pdu.EncodedStringValue;
@@ -47,6 +51,7 @@ public class MmsCipher {
       throws InvalidMessageException, LegacyMessageException, DuplicateMessageException,
              NoSessionException
   {
+
     try {
       SessionCipher sessionCipher = new SessionCipher(axolotlStore, new AxolotlAddress(pdu.getFrom().getString(), TextSecureAddress.DEFAULT_DEVICE_ID));
       Optional<byte[]> ciphertext = getEncryptedData(pdu);
@@ -85,38 +90,64 @@ public class MmsCipher {
     }
   }
 
-  public SendReq encrypt(Context context, SendReq message)
+  public List<SendReq> encrypt(Context context, SendReq message, MasterSecret masterSecret)
       throws NoSessionException, RecipientFormattingException, UndeliverableMessageException
   {
+    List<byte[]> pduBytesList = new ArrayList<>();
+    List<SendReq> mmsesToSend = new ArrayList<>();
+
     EncodedStringValue[] encodedRecipient = message.getTo();
     String               recipientString  = encodedRecipient[0].getString();
-    byte[]               pduBytes         = new PduComposer(context, message).make();
 
-    if (pduBytes == null) {
-      throw new UndeliverableMessageException("PDU composition failed, null payload");
+    List<SendReq> toSendReqs = new ArrayList<>();;
+
+    try {
+      toSendReqs = FileSlide.splitSendReq(message,context, masterSecret);
+    } catch (IOException|URISyntaxException e) {
+      Log.e("FileSlide", "Multipart-splitter failed");
+      throw new UndeliverableMessageException("Multipart-splitter failed");
     }
+    if(toSendReqs.size() == 0)
+      toSendReqs.add(message);
+
+    for(SendReq splitsMMS : toSendReqs) {
+      byte[] pduBytes = new PduComposer(context, splitsMMS).make();
+      if (pduBytes == null) {
+        throw new UndeliverableMessageException("PDU composition failed, null payload");
+      }
+      pduBytesList.add(pduBytes);
+    }
+
+    if(pduBytesList.size() < 1)
+      throw new UndeliverableMessageException("PDU composition failed, null payload");
 
     if (!axolotlStore.containsSession(new AxolotlAddress(recipientString, TextSecureAddress.DEFAULT_DEVICE_ID))) {
       throw new NoSessionException("No session for: " + recipientString);
     }
 
-    SessionCipher     cipher            = new SessionCipher(axolotlStore, new AxolotlAddress(recipientString, TextSecureAddress.DEFAULT_DEVICE_ID));
-    CiphertextMessage ciphertextMessage = cipher.encrypt(pduBytes);
-    byte[]            encryptedPduBytes = textTransport.getEncodedMessage(ciphertextMessage.serialize());
+    SessionCipher cipher = new SessionCipher(axolotlStore, new AxolotlAddress(recipientString, TextSecureAddress.DEFAULT_DEVICE_ID));
 
-    PduBody body         = new PduBody();
-    PduPart part         = new PduPart();
-    SendReq encryptedPdu = new SendReq(message.getPduHeaders(), body);
+    for(byte[] input : pduBytesList) {
 
-    part.setContentId((System.currentTimeMillis()+"").getBytes());
-    part.setContentType(ContentType.TEXT_PLAIN.getBytes());
-    part.setName((System.currentTimeMillis()+"").getBytes());
-    part.setData(encryptedPduBytes);
-    body.addPart(part);
-    encryptedPdu.setSubject(new EncodedStringValue(WirePrefix.calculateEncryptedMmsSubject()));
-    encryptedPdu.setBody(body);
+      CiphertextMessage ciphertextMessage = cipher.encrypt(input);
+      byte[] encryptedPduBytes = textTransport.getEncodedMessage(ciphertextMessage.serialize());
 
-    return encryptedPdu;
+      PduBody body = new PduBody();
+      PduPart part = new PduPart();
+      SendReq encryptedPdu = new SendReq(message.getPduHeaders(), body);
+
+      part.setContentId((System.currentTimeMillis() + "").getBytes());
+      part.setContentType(ContentType.TEXT_PLAIN.getBytes());
+      part.setName((System.currentTimeMillis() + "").getBytes());
+      part.setData(encryptedPduBytes);
+      body.addPart(part);
+      encryptedPdu.setSubject(new EncodedStringValue(WirePrefix.calculateEncryptedMmsSubject()));
+      encryptedPdu.setBody(body);
+
+      mmsesToSend.add(encryptedPdu);
+
+    }
+    return mmsesToSend;
   }
 
 

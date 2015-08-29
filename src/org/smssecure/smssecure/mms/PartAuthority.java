@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.UriMatcher;
 import android.net.Uri;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import org.smssecure.smssecure.crypto.MasterSecret;
 import org.smssecure.smssecure.database.DatabaseFactory;
 import org.smssecure.smssecure.database.PartDatabase;
@@ -70,4 +72,9 @@ public class PartAuthority {
     Uri uri = Uri.withAppendedPath(THUMB_CONTENT_URI, String.valueOf(partId.getUniqueId()));
     return ContentUris.withAppendedId(uri, partId.getRowId());
   }
+
+  public static Uri getPartContentUriByFileName(String filename){
+    throw new MaterialDialog.NotImplementedException("multipartsave not yet supported");
+  }
+
 }

@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import org.smssecure.smssecure.R;
 import org.smssecure.smssecure.crypto.MasterSecret;
+import org.smssecure.smssecure.mms.FileSlide;
 import org.smssecure.smssecure.mms.PartAuthority;
 import org.whispersystems.textsecure.internal.push.TextSecureProtos;
 
@@ -63,6 +64,8 @@ public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTa
       }
 
       File        mediaFile   = constructOutputFile(attachment);
+
+
       InputStream inputStream = PartAuthority.getPartStream(context, masterSecret, attachment.uri);
 
       if (inputStream == null) {
@@ -123,7 +126,11 @@ public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTa
     File file;
     int i = 0;
     if(ContentType.isDrmType(attachement.contentType) && attachement.fileName != null){
-      String receivedFileName = new File(attachement.fileName).getName();
+      String originalFilename = attachement.fileName;
+      if(FileSlide.isMultiPart(attachement.fileName)){
+        originalFilename = FileSlide.parseOriginalFilename(attachement.fileName);
+      }
+      String receivedFileName = new File(originalFilename).getName();
       file = new File(outputDirectory, receivedFileName);
       while(file.exists()){
         file = new File(outputDirectory, receivedFileName + (++i));
@@ -151,15 +158,17 @@ public class SaveAttachmentTask extends ProgressDialogAsyncTask<SaveAttachmentTa
     public String contentType;
     public long   date;
     public String    fileName;
+    public boolean isMulti;
 
-    public Attachment(Uri uri, String contentType, long date, String fileName) {
+    public Attachment(Uri uri, String contentType, long date, String fileName, boolean isMulti) {
       if (uri == null || contentType == null || date < 0) {
         throw new AssertionError("uri, content type, and date must all be specified");
       }
       this.uri         = uri;
       this.contentType = contentType;
       this.date        = date;
-      this.fileName     = fileName;
+      this.fileName    = fileName;
+      this.isMulti     = isMulti;
     }
   }
 

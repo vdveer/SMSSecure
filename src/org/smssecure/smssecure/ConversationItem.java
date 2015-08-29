@@ -481,7 +481,7 @@ public class ConversationItem extends LinearLayout implements Recipient.Recipien
             } catch(NumberFormatException nfe){
               receiveDate = new Date().getTime();
             }
-            saveTask.execute(new SaveAttachmentTask.Attachment(slide.getUri(), slide.getContentType(), receiveDate, receivedFileName));
+            saveTask.execute(new SaveAttachmentTask.Attachment(slide.getUri(), slide.getContentType(), receiveDate, receivedFileName, slide.isMultipart()));
           }
         });
         builder.setNegativeButton(R.string.no, null);

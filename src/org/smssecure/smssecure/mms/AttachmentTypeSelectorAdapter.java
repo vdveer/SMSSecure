@@ -95,6 +95,7 @@ public class AttachmentTypeSelectorAdapter extends ArrayAdapter<AttachmentTypeSe
   }
 
 
+
   public void setSecureDestination(boolean isSecure){
     if(fileIdentifier == null)
       fileIdentifier = new IconListItem("File", ResUtil.getDrawableRes(context, R.attr.conversation_attach), ADD_FILE);

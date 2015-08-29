@@ -14,6 +14,7 @@ import org.smssecure.smssecure.database.NoSuchMessageException;
 import org.smssecure.smssecure.jobs.requirements.MasterSecretRequirement;
 import org.smssecure.smssecure.mms.ApnUnavailableException;
 import org.smssecure.smssecure.mms.CompatMmsConnection;
+import org.smssecure.smssecure.mms.FileSlide;
 import org.smssecure.smssecure.mms.MediaConstraints;
 import org.smssecure.smssecure.mms.MmsSendResult;
 import org.smssecure.smssecure.mms.OutgoingLegacyMmsConnection;
@@ -34,7 +35,10 @@ import org.whispersystems.jobqueue.requirements.NetworkRequirement;
 import org.whispersystems.libaxolotl.NoSessionException;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import ws.com.google.android.mms.MmsException;
 import ws.com.google.android.mms.pdu.EncodedStringValue;
@@ -73,10 +77,18 @@ public class MmsSendJob extends SendJob {
     try {
       validateDestinations(message);
 
-      final byte[]        pduBytes = getPduBytes(masterSecret, message);
-      final SendConf      sendConf = new CompatMmsConnection(context).send(pduBytes);
-      final MmsSendResult result   = getSendResult(sendConf, message);
+      final List<byte[]>        pduBytes = getPduBytes(masterSecret, message);
+      MmsSendResult result = null;
+      int i = 0;
+      Log.w("MMSsendJob", "Starting sending parts, remaining: " + pduBytes.size());
+      for(byte[] part : pduBytes) {
+        Log.w("MMSsendJob", "Starting sending part: "+i);
+        final SendConf sendConf = new CompatMmsConnection(context).send(part);
+        result = getSendResult(sendConf, message);
+        Log.w("MMSsendJob", "Done sending part: "+i);
+        i++;
 
+      }
       if (result.isUpgradedSecure()) {
         database.markAsSecure(messageId);
       }
@@ -105,29 +117,39 @@ public class MmsSendJob extends SendJob {
     notifyMediaMessageDeliveryFailed(context, messageId);
   }
 
-  private byte[] getPduBytes(MasterSecret masterSecret, SendReq message)
+  private List<byte[]> getPduBytes(MasterSecret masterSecret, SendReq message)
       throws IOException, UndeliverableMessageException, InsecureFallbackApprovalException
   {
+
+    List<byte[]> messagesToSend = new ArrayList<>();
+    List<SendReq> sendReqs = new ArrayList<>();
 
     String number = TelephonyUtil.getManager(context).getLine1Number();
 
     message = getResolvedMessage(masterSecret, message, MediaConstraints.MMS_CONSTRAINTS, true);
     message.setBody(SmilUtil.getSmilBody(message.getBody()));
 
+
+
     if (MmsDatabase.Types.isSecureType(message.getDatabaseMessageBox())) {
       Log.w(TAG, "Encrypting MMS...");
-      message        = getEncryptedMessage(masterSecret, message);
+      sendReqs        = getEncryptedMessage(masterSecret, message);
+    }
+    else
+      sendReqs.add(message);
+
+    for(SendReq sendReq : sendReqs) {
+      byte[] pduBytes = new PduComposer(context, sendReq).make();
+      if (pduBytes == null) {
+        throw new UndeliverableMessageException("PDU composition failed, null payload");
+      }
+      messagesToSend.add(pduBytes);
     }
 
-    if (number != null && number.trim().length() != 0) {
-      message.setFrom(new EncodedStringValue(number));
-    }
-    byte[] pduBytes = new PduComposer(context, message).make();
-    if (pduBytes == null) {
+    if(messagesToSend.size() < 1)
       throw new UndeliverableMessageException("PDU composition failed, null payload");
-    }
 
-    return pduBytes;
+    return messagesToSend;
   }
 
   private MmsSendResult getSendResult(SendConf conf, SendReq message)
@@ -150,12 +172,12 @@ public class MmsSendJob extends SendJob {
     }
   }
 
-  private SendReq getEncryptedMessage(MasterSecret masterSecret, SendReq pdu)
+  private List<SendReq> getEncryptedMessage(MasterSecret masterSecret, SendReq pdu)
       throws InsecureFallbackApprovalException, UndeliverableMessageException
   {
     try {
       MmsCipher cipher = new MmsCipher(new SMSSecureAxolotlStore(context, masterSecret));
-      return cipher.encrypt(context, pdu);
+      return cipher.encrypt(context, pdu, masterSecret);
     } catch (NoSessionException e) {
       throw new InsecureFallbackApprovalException(e);
     } catch (RecipientFormattingException e) {

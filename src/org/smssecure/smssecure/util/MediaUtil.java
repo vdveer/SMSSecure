@@ -17,6 +17,7 @@ import org.smssecure.smssecure.mms.PartAuthority;
 import org.smssecure.smssecure.mms.Slide;
 import org.smssecure.smssecure.mms.VideoSlide;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,14 +46,16 @@ public class MediaUtil {
   }
 
   public static byte[] getPartData(Context context, MasterSecret masterSecret, PduPart part)
-      throws IOException
+          throws IOException
   {
     ByteArrayOutputStream os = part.getDataSize() > 0 && part.getDataSize() < Integer.MAX_VALUE
-        ? new ByteArrayOutputStream((int) part.getDataSize())
-        : new ByteArrayOutputStream();
+            ? new ByteArrayOutputStream((int) part.getDataSize())
+            : new ByteArrayOutputStream();
     Util.copy(PartAuthority.getPartStream(context, masterSecret, part.getDataUri()), os);
     return os.toByteArray();
   }
+
+
 
   private static Bitmap generateImageThumbnail(Context context, MasterSecret masterSecret, Uri uri)
       throws IOException, BitmapDecodingException, OutOfMemoryError

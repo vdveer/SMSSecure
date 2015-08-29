@@ -300,7 +300,7 @@ public class ConversationFragment extends ListFragment
           public void onSuccess(Slide slide) {
             String receivedFileName = slide.getPart().getFilename() != null ? new String(slide.getPart().getFilename()) : null;
             SaveAttachmentTask saveTask = new SaveAttachmentTask(getActivity(), masterSecret);
-            saveTask.execute(new Attachment(slide.getUri(), slide.getContentType(), message.getDateReceived(), receivedFileName));
+            saveTask.execute(new Attachment(slide.getUri(), slide.getContentType(), message.getDateReceived(), receivedFileName, slide.isMultipart()));
           }
 
           @Override

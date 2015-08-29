@@ -126,7 +126,7 @@ public class AttachmentManager implements DialogInterface.OnClickListener{
 
     if(file.length() > MmsMediaConstraints.getMaxMmsPref() && SMSSecurePreferences.getMultipartMMS(context)){
       this.file = file;
-      String numberOfParts = String.valueOf((file.length()+1)/MmsMediaConstraints.getMaxMmsPref()) + 1;
+      String numberOfParts = String.valueOf((file.length()-1)/MmsMediaConstraints.getMaxMmsPref() + 1);
       FileSlide.showWarningDialog(context, this, numberOfParts);
     }else {
       setMedia(new FileSlide(context, file, false));
