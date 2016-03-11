@@ -197,6 +197,10 @@ public class ContentType {
         return (null != contentType) && contentType.startsWith("video/");
     }
 
+    public static boolean isNonTextVideoImageAudioType(String contentType){
+        return (null != contentType) && !isVideoType(contentType) && !isTextType(contentType) && !isAudioType(contentType) && !isImageType(contentType);
+    }
+
     public static boolean isDrmType(String contentType) {
         return (null != contentType)
                 && (contentType.equals(APP_DRM_CONTENT)

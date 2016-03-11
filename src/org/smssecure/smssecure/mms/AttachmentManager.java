@@ -47,6 +47,7 @@ import org.smssecure.smssecure.util.ViewUtil;
 import org.smssecure.smssecure.util.concurrent.ListenableFuture.Listener;
 import org.whispersystems.libaxolotl.util.guava.Optional;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -82,6 +83,24 @@ public class AttachmentManager {
     thumbnail.setOnClickListener(new ThumbnailClickListener());
   }
 
+  //public void clearIfFileSlides(){
+    //if(slideDeck.hasFileSlide()) {
+    //  slideDeck.clear();
+    //  attachmentView.setVisibility(View.GONE);
+    //  attachmentListener.onAttachmentChanged();
+    //}
+  //}
+
+
+  public void selectFile(final MasterSecret secret, final Activity activity, int requestCode) {
+        new FileChooser(activity).setFileListener(new FileChooser.FileSelectedListener() {
+         @Override
+        public void fileSelected(final File file) {
+           setMedia(secret, Uri.fromFile(file), MediaType.FILE, new MmsMediaConstraints());
+      }
+        }).showDialog();
+      }
+
   public void clear() {
     ViewUtil.fadeOut(attachmentView, 200).addListener(new Listener<Boolean>() {
       @Override
@@ -92,7 +111,8 @@ public class AttachmentManager {
       }
 
       @Override
-      public void onFailure(ExecutionException e) {}
+      public void onFailure(ExecutionException e) {
+      }
     });
 
     markGarbage(getSlideUri());
@@ -156,8 +176,11 @@ public class AttachmentManager {
           final Slide slide     = mediaType.createSlide(context, uri, mediaSize);
           Log.w(TAG, "slide with size " + mediaSize + " took " + (System.currentTimeMillis() - start) + "ms");
           return slide;
-        } catch (IOException ioe) {
-          Log.w(TAG, ioe);
+        } catch (IOException e) {
+          Log.w(TAG, e);
+          return null;
+        } catch (MediaTooLargeException mtle){
+          //TODO vdveer: add case for passing info on exc to other thread.
           return null;
         }
       }
@@ -305,19 +328,19 @@ public class AttachmentManager {
   }
 
   public enum MediaType {
-    IMAGE, GIF, AUDIO, VIDEO;
+    IMAGE, GIF, AUDIO, VIDEO, FILE;
 
     public @NonNull Slide createSlide(@NonNull Context context,
                                       @NonNull Uri     uri,
                                                long    dataSize)
-        throws IOException
-    {
+            throws IOException, MediaTooLargeException {
       switch (this) {
-      case IMAGE: return new ImageSlide(context, uri, dataSize);
-      case GIF:   return new GifSlide(context, uri, dataSize);
-      case AUDIO: return new AudioSlide(context, uri, dataSize);
-      case VIDEO: return new VideoSlide(context, uri, dataSize);
-      default:    throw  new AssertionError("unrecognized enum");
+        case IMAGE: return new ImageSlide(context, uri, dataSize);
+        case GIF:   return new GifSlide(context, uri, dataSize);
+        case AUDIO: return new AudioSlide(context, uri, dataSize);
+        case VIDEO: return new VideoSlide(context, uri, dataSize);
+        case FILE:  return new FileSlide(context, uri, dataSize);
+        default:    throw  new AssertionError("unrecognized enum");
       }
     }
 
@@ -327,6 +350,7 @@ public class AttachmentManager {
       if (ContentType.isImageType(mimeType)) return IMAGE;
       if (ContentType.isAudioType(mimeType)) return AUDIO;
       if (ContentType.isVideoType(mimeType)) return VIDEO;
+      if (ContentType.isDrmType(mimeType))   return FILE;
       return null;
     }
   }

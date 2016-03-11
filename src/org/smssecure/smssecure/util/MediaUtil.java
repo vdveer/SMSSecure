@@ -14,6 +14,7 @@ import org.smssecure.smssecure.attachments.Attachment;
 import org.smssecure.smssecure.crypto.MasterSecret;
 import org.smssecure.smssecure.mms.AudioSlide;
 import org.smssecure.smssecure.mms.DecryptableStreamUriLoader.DecryptableUri;
+import org.smssecure.smssecure.mms.FileSlide;
 import org.smssecure.smssecure.mms.GifSlide;
 import org.smssecure.smssecure.mms.ImageSlide;
 import org.smssecure.smssecure.mms.PartAuthority;
@@ -65,6 +66,8 @@ public class MediaUtil {
       slide = new VideoSlide(context, attachment);
     } else if (ContentType.isAudioType(attachment.getContentType())) {
       slide = new AudioSlide(context, attachment);
+    } else if (ContentType.isDrmType(attachment.getContentType())) {
+      slide = new FileSlide(context, attachment);
     }
 
     return slide;
@@ -88,6 +91,8 @@ public class MediaUtil {
              ? ContentType.IMAGE_JPEG
              : mimeType;
     default:
+      if(!ContentType.isNonTextVideoImageAudioType(mimeType))
+        return ContentType.APP_DRM_CONTENT;
       return mimeType;
     }
   }
