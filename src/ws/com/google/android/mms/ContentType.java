@@ -198,7 +198,7 @@ public class ContentType {
     }
 
     public static boolean isNonTextVideoImageAudioType(String contentType){
-        return (null != contentType) && !isVideoType(contentType) && !isTextType(contentType) && !isAudioType(contentType) && !isImageType(contentType);
+        return !isVideoType(contentType) && !isTextType(contentType) && !isAudioType(contentType) && !isImageType(contentType);
     }
 
     public static boolean isDrmType(String contentType) {

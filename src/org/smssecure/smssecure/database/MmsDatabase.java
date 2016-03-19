@@ -503,7 +503,8 @@ public class MmsDatabase extends MessagingDatabase {
                                                databaseAttachment.getSize(),
                                                databaseAttachment.getLocation(),
                                                databaseAttachment.getKey(),
-                                               databaseAttachment.getRelay()));
+                                               databaseAttachment.getRelay(),
+                                               databaseAttachment.getFileName()));
       }
 
       return insertMediaMessage(masterSecret,

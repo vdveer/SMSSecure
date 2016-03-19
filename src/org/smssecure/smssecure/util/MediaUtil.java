@@ -91,7 +91,7 @@ public class MediaUtil {
              ? ContentType.IMAGE_JPEG
              : mimeType;
     default:
-      if(!ContentType.isNonTextVideoImageAudioType(mimeType))
+      if(ContentType.isNonTextVideoImageAudioType(mimeType))
         return ContentType.APP_DRM_CONTENT;
       return mimeType;
     }
@@ -127,6 +127,10 @@ public class MediaUtil {
 
   public static boolean isAudio(Attachment attachment) {
     return ContentType.isAudioType(attachment.getContentType());
+  }
+
+  public static boolean isFile(Attachment attachment) {
+    return ContentType.isDrmType(attachment.getContentType());
   }
 
   public static boolean isVideo(Attachment attachment) {

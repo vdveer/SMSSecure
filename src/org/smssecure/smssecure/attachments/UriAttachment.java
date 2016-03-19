@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.smssecure.smssecure.ApplicationContext;
 import org.smssecure.smssecure.crypto.MasterSecret;
@@ -15,6 +16,8 @@ import org.whispersystems.libaxolotl.util.guava.Optional;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import ws.com.google.android.mms.ContentType;
 
 public class UriAttachment extends Attachment {
 
@@ -25,12 +28,20 @@ public class UriAttachment extends Attachment {
     this(uri, uri, contentType, transferState, size, UriAttachment.getFilenameFromUri(uri));
   }
 
+  public UriAttachment(@NonNull Uri uri, @NonNull String contentType, int transferState, long size, String inputFilename) {
+    this(uri, uri, contentType, transferState, size, inputFilename);
+  }
+
   public UriAttachment(@NonNull Uri dataUri, @NonNull Uri thumbnailUri,
                        @NonNull String contentType, int transferState, long size, @Nullable String fileName)
   {
     super(contentType, transferState, size, null, null, null, fileName);
     this.dataUri      = dataUri;
-    this.thumbnailUri = thumbnailUri;
+    if(!ContentType.isDrmType(contentType)) {
+      this.thumbnailUri = thumbnailUri;
+    }
+    else
+      this.thumbnailUri = null;
   }
 
   @Override
@@ -56,7 +67,8 @@ public class UriAttachment extends Attachment {
   }
 
   public static String getFilenameFromUri(Uri uri) {
-    String scheme = uri.getScheme(), fileName = null;
+    String scheme = uri.getScheme();
+    String fileName = null;
     if (scheme.equals("file")) {
       fileName = uri.getLastPathSegment();
     } else if (scheme.equals("content")) {
@@ -71,6 +83,7 @@ public class UriAttachment extends Attachment {
         cursor.close();
       }
     }
+    Log.w("bla", "getFilenameFromUri: " + fileName);
     return fileName;
   }
 
