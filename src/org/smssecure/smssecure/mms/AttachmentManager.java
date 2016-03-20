@@ -187,9 +187,6 @@ public class AttachmentManager {
         } catch (IOException e) {
           Log.w(TAG, e);
           return null;
-        } catch (MediaTooLargeException mtle){
-          //TODO vdveer: add case for passing info on exc to other thread.
-          return null;
         }
       }
 
@@ -342,7 +339,7 @@ public class AttachmentManager {
                                       @NonNull Uri     uri,
                                                long    dataSize,
                                                 String fileName)
-            throws IOException, MediaTooLargeException {
+            throws IOException {
       switch (this) {
         case IMAGE: return new ImageSlide(context, uri, dataSize);
         case GIF:   return new GifSlide(context, uri, dataSize);
