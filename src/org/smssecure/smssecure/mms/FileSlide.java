@@ -84,6 +84,6 @@ public class FileSlide extends Slide {
 
     @Override
     public @DrawableRes int getPlaceholderRes(Theme theme) {
-        return ResUtil.getDrawableRes(theme, R.attr.conversation_attach);
+        return ResUtil.getDrawableRes(theme, R.attr.conversation_attach_file);
     }
 }
