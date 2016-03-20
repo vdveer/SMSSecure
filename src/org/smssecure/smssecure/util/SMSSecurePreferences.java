@@ -90,6 +90,8 @@ public class SMSSecurePreferences {
   public  static final String NOTIFICATION_PRIVACY_PREF        = "pref_notification_privacy";
 
   private static final String MULTIPART_MMS                    = "pref_experimental_multipartmms_file";
+  public static final String MMS_SIZE_PREF                     = "pref_mms_size";
+  public static final String LIMIT_IMAGE_SIZE_PREF             = "pref_limit_mms_image";
 
   private static final String MEDIA_DOWNLOAD_PREF              = "pref_media_download";
   private static final String MEDIA_DOWNLOAD_ROAMING_PREF      = "pref_media_download_roaming";
@@ -104,6 +106,13 @@ public class SMSSecurePreferences {
 
   public static boolean getMultipartMMS(Context context){
     return getBooleanPreference(context, MULTIPART_MMS, true);
+  }
+
+  public static int getMmmMaxSize(Context context){
+    return getIntegerPreference(context, MMS_SIZE_PREF, 260);
+  }
+  public static boolean getLimitedMmsImageDimensions(Context context){
+    return getBooleanPreference(context, LIMIT_IMAGE_SIZE_PREF, true);
   }
 
   public static void setRatingLaterTimestamp(Context context, long timestamp) {
@@ -522,6 +531,9 @@ public class SMSSecurePreferences {
   }
 
   public static boolean getBooleanPreference(Context context, String key, boolean defaultValue) {
+    if(context == null){
+      return defaultValue;
+    }
     return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(key, defaultValue);
   }
 
@@ -530,10 +542,16 @@ public class SMSSecurePreferences {
   }
 
   public static String getStringPreference(Context context, String key, String defaultValue) {
+    if(context == null){
+      return defaultValue;
+    }
     return PreferenceManager.getDefaultSharedPreferences(context).getString(key, defaultValue);
   }
 
   private static int getIntegerPreference(Context context, String key, int defaultValue) {
+    if(context == null){
+      return defaultValue;
+    }
     return PreferenceManager.getDefaultSharedPreferences(context).getInt(key, defaultValue);
   }
 
@@ -546,6 +564,9 @@ public class SMSSecurePreferences {
   }
 
   private static long getLongPreference(Context context, String key, long defaultValue) {
+    if(context == null){
+      return defaultValue;
+    }
     return PreferenceManager.getDefaultSharedPreferences(context).getLong(key, defaultValue);
   }
 

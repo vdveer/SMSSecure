@@ -706,6 +706,11 @@
     <string name="preferences__show_sent_time_instead_of_received_time_in_conversations">Show sent time instead of received time for incoming messages</string>
     <string name="pref_experimental_multipartmms_file_title">Filetransfer in secure MMS</string>
     <string name="pref_experimental_multipartmms_file_summary">Allows sending of files to secure conversation recipients. Limited to max MMS size.</string>
+    <string name="preferences__mms_size">MMS size limit</string>
+    <string name="preferences__mms_limit_image">MMS image resizing</string>
+    <string name="preferences__mms_limit_image_disc">Turn off if your carrier allows to send big pictures (>1MB)</string>
+    <string name="preferences__mms_size_disc">Limit your MMS message size to your carriers needs</string>
+    <string name="preferences__mms_size_format">kB</string>
     <string name="preferences_chats__mms">MMS</string>
     <string name="preferences__auto_retrieve">Auto-retrieve</string>
     <string name="preferences__automatically_retrieve_mms_messages">Automatically retrieve MMS messages</string>
