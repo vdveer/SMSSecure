@@ -35,12 +35,15 @@ public abstract class MediaConstraints {
 
   public abstract int getAudioMaxSize();
 
+  public abstract int getFileMaxSize();
+
   public boolean isSatisfied(@NonNull Context context, @NonNull MasterSecret masterSecret, @NonNull Attachment attachment) {
     try {
       return (MediaUtil.isGif(attachment)    && attachment.getSize() <= getGifMaxSize()   && isWithinBounds(context, masterSecret, attachment.getDataUri())) ||
              (MediaUtil.isImage(attachment)  && attachment.getSize() <= getImageMaxSize() && isWithinBounds(context, masterSecret, attachment.getDataUri())) ||
              (MediaUtil.isAudio(attachment)  && attachment.getSize() <= getAudioMaxSize()) ||
              (MediaUtil.isVideo(attachment)  && attachment.getSize() <= getVideoMaxSize()) ||
+             (MediaUtil.isFile(attachment)   && attachment.getSize() <= getFileMaxSize()) ||
              (!MediaUtil.isImage(attachment) && !MediaUtil.isAudio(attachment) && !MediaUtil.isVideo(attachment));
     } catch (IOException ioe) {
       Log.w(TAG, "Failed to determine if media's constraints are satisfied.", ioe);
