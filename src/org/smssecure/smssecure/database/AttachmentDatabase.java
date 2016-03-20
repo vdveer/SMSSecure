@@ -86,7 +86,7 @@ public class AttachmentDatabase extends Database {
                                                            MMS_ID, CONTENT_TYPE, NAME, CONTENT_DISPOSITION,
                                                            CONTENT_LOCATION, DATA, TRANSFER_STATE,
                                                            SIZE, THUMBNAIL, THUMBNAIL_ASPECT_RATIO,
-                                                           UNIQUE_ID};
+                                                           UNIQUE_ID, FILENAME};
 
   public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + ROW_ID + " INTEGER PRIMARY KEY, " +
     MMS_ID + " INTEGER, " + "seq" + " INTEGER DEFAULT 0, "                        +
@@ -308,7 +308,8 @@ public class AttachmentDatabase extends Database {
     ContentValues contentValues = new ContentValues();
     contentValues.put(SIZE, dataSize);
     contentValues.put(CONTENT_TYPE, mediaStream.getMimeType());
-    contentValues.put(FILENAME, dataFile.getName());
+    if(attachment.getFileName() != null)
+      contentValues.put(FILENAME, databaseAttachment.getFileName());
 
     database.update(TABLE_NAME, contentValues, PART_ID_WHERE, databaseAttachment.getAttachmentId().toStrings());
 
@@ -433,7 +434,6 @@ public class AttachmentDatabase extends Database {
   }
 
   DatabaseAttachment getAttachment(Cursor cursor) {
-    int filenameColumnIndex = cursor.getColumnIndex(FILENAME);
     return new DatabaseAttachment(new AttachmentId(cursor.getLong(cursor.getColumnIndexOrThrow(ATTACHMENT_ID_ALIAS)),
                                                    cursor.getLong(cursor.getColumnIndexOrThrow(UNIQUE_ID))),
                                   cursor.getLong(cursor.getColumnIndexOrThrow(MMS_ID)),
@@ -443,8 +443,8 @@ public class AttachmentDatabase extends Database {
                                   cursor.getLong(cursor.getColumnIndexOrThrow(SIZE)),
                                   cursor.getString(cursor.getColumnIndexOrThrow(CONTENT_LOCATION)),
                                   cursor.getString(cursor.getColumnIndexOrThrow(CONTENT_DISPOSITION)),
-                                  cursor.getString(cursor.getColumnIndexOrThrow(NAME)), filenameColumnIndex >= 0 ?
-                                  cursor.getString(filenameColumnIndex) : null);
+                                  cursor.getString(cursor.getColumnIndexOrThrow(NAME)),
+                                  cursor.getString(cursor.getColumnIndexOrThrow(FILENAME)));
   }
 
 
@@ -472,8 +472,6 @@ public class AttachmentDatabase extends Database {
     contentValues.put(NAME, attachment.getRelay());
     if(attachment.getFileName() != null)
       contentValues.put(FILENAME, attachment.getFileName());
-    if(partData.first.getName() != null)
-      contentValues.put(FILENAME, partData.first.getName());
 
     if (partData != null) {
       contentValues.put(DATA, partData.first.getAbsolutePath());

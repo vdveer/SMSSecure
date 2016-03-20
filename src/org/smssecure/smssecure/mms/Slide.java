@@ -105,10 +105,21 @@ public abstract class Slide {
   protected static Attachment constructAttachmentFromUri(@NonNull Context context,
                                                          @NonNull Uri     uri,
                                                          @NonNull String  defaultMime,
-                                                                  long     size)
+                                                         long     size)
   {
     Optional<String> resolvedType = Optional.fromNullable(MediaUtil.getMimeType(context, uri));
-    return new UriAttachment(uri, resolvedType.or(defaultMime), AttachmentDatabase.TRANSFER_PROGRESS_STARTED, size);
+    return new UriAttachment(uri, resolvedType.or(defaultMime), AttachmentDatabase.TRANSFER_PROGRESS_STARTED, size, context);
+  }
+  protected static Attachment constructAttachmentFromUri(@NonNull Context context,
+                                                         @NonNull Uri     uri,
+                                                         @NonNull String  defaultMime,
+                                                         long     size,
+                                                         String   fileName)
+  {
+    Optional<String> resolvedType = Optional.fromNullable(MediaUtil.getMimeType(context, uri));
+    if(fileName != null)
+      return new UriAttachment(uri, resolvedType.or(defaultMime), AttachmentDatabase.TRANSFER_PROGRESS_STARTED, size, fileName);
+    return new UriAttachment(uri, resolvedType.or(defaultMime), AttachmentDatabase.TRANSFER_PROGRESS_STARTED, size, context);
   }
 
   @Override

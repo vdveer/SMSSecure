@@ -149,6 +149,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   public static final String THREAD_ID_EXTRA         = "thread_id";
   public static final String IS_ARCHIVED_EXTRA       = "is_archived";
   public static final String TEXT_EXTRA              = "draft_text";
+  public static final String FILENAME_EXTRA          = "filename";
   public static final String DISTRIBUTION_TYPE_EXTRA = "distribution_type";
 
   private static final int PICK_IMAGE        = 1;
@@ -686,6 +687,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
   private void initializeDraft() {
     final String    draftText      = getIntent().getStringExtra(TEXT_EXTRA);
     final Uri       draftMedia     = getIntent().getData();
+    final String    draftFilename  = getIntent().getStringExtra(FILENAME_EXTRA);
     final MediaType draftMediaType = MediaType.from(getIntent().getType());
 
     if (draftText != null)                            composeText.setText(draftText);
@@ -695,7 +697,8 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       if(draftMediaType.equals(MediaType.FILE) && !isSecureSmsDestination){
         Toast.makeText(this, R.string.ConversationActivity_sorry_no_files_attaching_on_insecure_chat, Toast.LENGTH_LONG).show();
       } else {
-        setMedia(draftMedia, draftMediaType);
+        if(draftFilename != null) setMedia(draftMedia, draftMediaType, draftFilename);
+        else                      setMedia(draftMedia, draftMediaType);
       }
     }
 
@@ -1008,6 +1011,10 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
   private void setMedia(Uri uri, MediaType mediaType) {
     attachmentManager.setMedia(masterSecret, uri, mediaType, getCurrentMediaConstraints());
+  }
+
+  private void setMedia(Uri uri, MediaType mediaType, String fileName) {
+    attachmentManager.setMedia(masterSecret, uri, mediaType, getCurrentMediaConstraints(), fileName);
   }
 
   private void addAttachmentContactInfo(Uri contactUri) {

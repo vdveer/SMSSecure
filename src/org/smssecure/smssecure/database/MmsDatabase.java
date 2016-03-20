@@ -138,6 +138,7 @@ public class MmsDatabase extends MessagingDatabase {
       AttachmentDatabase.CONTENT_LOCATION,
       AttachmentDatabase.CONTENT_DISPOSITION,
       AttachmentDatabase.NAME,
+      AttachmentDatabase.FILENAME,
       AttachmentDatabase.TRANSFER_STATE
   };
 

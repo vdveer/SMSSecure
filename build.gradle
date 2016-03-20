@@ -166,6 +166,10 @@ android {
             testProguardFiles buildTypes.debug.testProguardFiles
             signingConfig signingConfigs.release
         }
+        debuggable.initWith(buildTypes.debug)
+        debuggable {
+
+        }
     }
 
     sourceSets {

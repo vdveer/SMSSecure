@@ -42,6 +42,12 @@ public class FileSlide extends Slide {
             throw new MediaTooLargeException();
     }
 
+    public FileSlide(Context context, Uri uri, long dataSize, String fileName) throws IOException, MediaTooLargeException {
+        super(context, constructAttachmentFromUri(context, uri, ContentType.APP_DRM_CONTENT, dataSize, fileName));
+        if(dataSize > MmsMediaConstraints.MAX_MESSAGE_SIZE)
+            throw new MediaTooLargeException();
+    }
+
     public FileSlide(Context context, File file) throws IOException, MediaTooLargeException {
         super(context, constructAttachmentFromUri(context, Uri.fromFile(file), ContentType.APP_DRM_CONTENT, file.length()));
         if(file.length() > MmsMediaConstraints.MAX_MESSAGE_SIZE)

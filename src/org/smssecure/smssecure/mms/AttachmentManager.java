@@ -160,7 +160,15 @@ public class AttachmentManager {
   public void setMedia(@NonNull final MasterSecret masterSecret,
                        @NonNull final Uri uri,
                        @NonNull final MediaType mediaType,
-                       @NonNull final MediaConstraints constraints)
+                       @NonNull final MediaConstraints constraints){
+    setMedia(masterSecret, uri, mediaType, constraints, null);
+  }
+
+  public void setMedia(@NonNull final MasterSecret masterSecret,
+                       @NonNull final Uri uri,
+                       @NonNull final MediaType mediaType,
+                       @NonNull final MediaConstraints constraints,
+                       final String fileName)
   {
     new AsyncTask<Void, Void, Slide>() {
       @Override protected void onPreExecute() {
@@ -173,7 +181,7 @@ public class AttachmentManager {
         long start = System.currentTimeMillis();
         try {
           final long  mediaSize = MediaUtil.getMediaSize(context, masterSecret, uri);
-          final Slide slide     = mediaType.createSlide(context, uri, mediaSize);
+          final Slide slide     = mediaType.createSlide(context, uri, mediaSize, fileName);
           Log.w(TAG, "slide with size " + mediaSize + " took " + (System.currentTimeMillis() - start) + "ms");
           return slide;
         } catch (IOException e) {
@@ -332,14 +340,15 @@ public class AttachmentManager {
 
     public @NonNull Slide createSlide(@NonNull Context context,
                                       @NonNull Uri     uri,
-                                               long    dataSize)
+                                               long    dataSize,
+                                                String fileName)
             throws IOException, MediaTooLargeException {
       switch (this) {
         case IMAGE: return new ImageSlide(context, uri, dataSize);
         case GIF:   return new GifSlide(context, uri, dataSize);
         case AUDIO: return new AudioSlide(context, uri, dataSize);
         case VIDEO: return new VideoSlide(context, uri, dataSize);
-        case FILE:  return new FileSlide(context, uri, dataSize);
+         case FILE:  return new FileSlide(context, uri, dataSize, fileName);
         default:    throw  new AssertionError("unrecognized enum");
       }
     }
