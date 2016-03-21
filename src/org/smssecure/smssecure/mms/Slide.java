@@ -38,7 +38,6 @@ public abstract class Slide {
   public Slide(@NonNull Context context, @NonNull Attachment attachment) {
     this.context    = context;
     this.attachment = attachment;
-
   }
 
   public String getContentType() {
@@ -72,6 +71,10 @@ public abstract class Slide {
     return false;
   }
 
+  public boolean hasFile() { return false; }
+
+  public String getFileName() { return null; }
+
   public @NonNull String getContentDescription() { return ""; }
 
   public Attachment asAttachment() {
@@ -102,10 +105,21 @@ public abstract class Slide {
   protected static Attachment constructAttachmentFromUri(@NonNull Context context,
                                                          @NonNull Uri     uri,
                                                          @NonNull String  defaultMime,
-                                                                  long     size)
+                                                         long     size)
   {
     Optional<String> resolvedType = Optional.fromNullable(MediaUtil.getMimeType(context, uri));
-    return new UriAttachment(uri, resolvedType.or(defaultMime), AttachmentDatabase.TRANSFER_PROGRESS_STARTED, size);
+    return new UriAttachment(uri, resolvedType.or(defaultMime), AttachmentDatabase.TRANSFER_PROGRESS_STARTED, size, context);
+  }
+  protected static Attachment constructAttachmentFromUri(@NonNull Context context,
+                                                         @NonNull Uri     uri,
+                                                         @NonNull String  defaultMime,
+                                                         long     size,
+                                                         String   fileName)
+  {
+    Optional<String> resolvedType = Optional.fromNullable(MediaUtil.getMimeType(context, uri));
+    if(fileName != null)
+      return new UriAttachment(uri, resolvedType.or(defaultMime), AttachmentDatabase.TRANSFER_PROGRESS_STARTED, size, fileName);
+    return new UriAttachment(uri, resolvedType.or(defaultMime), AttachmentDatabase.TRANSFER_PROGRESS_STARTED, size, context);
   }
 
   @Override
@@ -118,6 +132,7 @@ public abstract class Slide {
            this.hasAudio() == that.hasAudio()                        &&
            this.hasImage() == that.hasImage()                        &&
            this.hasVideo() == that.hasVideo()                        &&
+           this.hasFile() == that.hasFile()                          &&
            this.getTransferState() == that.getTransferState()        &&
            Util.equals(this.getUri(), that.getUri())                 &&
            Util.equals(this.getThumbnailUri(), that.getThumbnailUri());

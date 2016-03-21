@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import org.smssecure.smssecure.attachments.Attachment;
 import org.smssecure.smssecure.crypto.MasterSecret;
 import org.smssecure.smssecure.database.model.MessageRecord;
 import org.whispersystems.libaxolotl.util.guava.Optional;
@@ -63,6 +64,7 @@ public class MmsSmsDatabase extends Database {
                                               AttachmentDatabase.CONTENT_LOCATION,
                                               AttachmentDatabase.CONTENT_DISPOSITION,
                                               AttachmentDatabase.NAME,
+                                              AttachmentDatabase.FILENAME,
                                               AttachmentDatabase.TRANSFER_STATE};
 
   public MmsSmsDatabase(Context context, SQLiteOpenHelper databaseHelper) {
@@ -137,6 +139,7 @@ public class MmsSmsDatabase extends Database {
                               AttachmentDatabase.CONTENT_LOCATION,
                               AttachmentDatabase.CONTENT_DISPOSITION,
                               AttachmentDatabase.NAME,
+                              AttachmentDatabase.FILENAME,
                               AttachmentDatabase.TRANSFER_STATE};
 
     String[] smsProjection = {SmsDatabase.DATE_SENT + " AS " + MmsSmsColumns.NORMALIZED_DATE_SENT,
@@ -162,6 +165,7 @@ public class MmsSmsDatabase extends Database {
                               AttachmentDatabase.CONTENT_LOCATION,
                               AttachmentDatabase.CONTENT_DISPOSITION,
                               AttachmentDatabase.NAME,
+                              AttachmentDatabase.FILENAME,
                               AttachmentDatabase.TRANSFER_STATE};
 
     SQLiteQueryBuilder mmsQueryBuilder = new SQLiteQueryBuilder();
@@ -172,12 +176,12 @@ public class MmsSmsDatabase extends Database {
 
     smsQueryBuilder.setTables(SmsDatabase.TABLE_NAME);
     mmsQueryBuilder.setTables(MmsDatabase.TABLE_NAME + " LEFT OUTER JOIN " +
-                              AttachmentDatabase.TABLE_NAME +
-                              " ON " + AttachmentDatabase.TABLE_NAME + "." + AttachmentDatabase.ROW_ID + " = " +
-                                  " (SELECT " + AttachmentDatabase.TABLE_NAME + "." + AttachmentDatabase.ROW_ID +
-                                  " FROM " + AttachmentDatabase.TABLE_NAME + " WHERE " +
-                                  AttachmentDatabase.TABLE_NAME + "." + AttachmentDatabase.MMS_ID + " = " +
-                                  MmsDatabase.TABLE_NAME + "." + MmsDatabase.ID + " LIMIT 1)");
+            AttachmentDatabase.TABLE_NAME +
+            " ON " + AttachmentDatabase.TABLE_NAME + "." + AttachmentDatabase.ROW_ID + " = " +
+            " (SELECT " + AttachmentDatabase.TABLE_NAME + "." + AttachmentDatabase.ROW_ID +
+            " FROM " + AttachmentDatabase.TABLE_NAME + " WHERE " +
+            AttachmentDatabase.TABLE_NAME + "." + AttachmentDatabase.MMS_ID + " = " +
+            MmsDatabase.TABLE_NAME + "." + MmsDatabase.ID + " LIMIT 1)");
 
 
     Set<String> mmsColumnsPresent = new HashSet<>();
@@ -209,6 +213,7 @@ public class MmsSmsDatabase extends Database {
     mmsColumnsPresent.add(AttachmentDatabase.CONTENT_LOCATION);
     mmsColumnsPresent.add(AttachmentDatabase.CONTENT_DISPOSITION);
     mmsColumnsPresent.add(AttachmentDatabase.NAME);
+    mmsColumnsPresent.add(AttachmentDatabase.FILENAME);
     mmsColumnsPresent.add(AttachmentDatabase.TRANSFER_STATE);
 
     Set<String> smsColumnsPresent = new HashSet<>();

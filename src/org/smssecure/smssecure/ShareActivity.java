@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.smssecure.smssecure.attachments.UriAttachment;
 import org.smssecure.smssecure.crypto.MasterSecret;
 import org.smssecure.smssecure.mms.PartAuthority;
 import org.smssecure.smssecure.providers.PersistentBlobProvider;
@@ -41,6 +42,8 @@ import org.smssecure.smssecure.util.ViewUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import ws.com.google.android.mms.ContentType;
 
 /**
  * An activity to quickly share content with contacts
@@ -60,6 +63,7 @@ public class ShareActivity extends PassphraseRequiredActionBarActivity
   private View         progressWheel;
   private Uri          resolvedExtra;
   private boolean      isPassingAlongMedia;
+  private String       resolvedFilename;
 
   @Override
   protected void onPreCreate() {
@@ -110,6 +114,7 @@ public class ShareActivity extends PassphraseRequiredActionBarActivity
     isPassingAlongMedia = false;
 
     Uri streamExtra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+    resolvedFilename = UriAttachment.getFilenameFromUri(streamExtra, context);
     if (streamExtra != null && PartAuthority.isLocalUri(streamExtra)) {
       isPassingAlongMedia = true;
       resolvedExtra       = streamExtra;
@@ -167,9 +172,11 @@ public class ShareActivity extends PassphraseRequiredActionBarActivity
     final Intent intent      = new Intent(this, target);
     final String textExtra   = getIntent().getStringExtra(Intent.EXTRA_TEXT);
     final Uri    streamExtra = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
-    final String type        = streamExtra != null ? getMimeType(streamExtra)
-                                                   : MediaUtil.getCorrectedMimeType(getIntent().getType());
+    //text should be in EXTRA_TEXT, right? So if text, accept as file
+    final String type        = streamExtra != null && !ContentType.isTextType(getMimeType(streamExtra)) ? getMimeType(streamExtra)
+                                                   : ContentType.SMS_SECURE_FILE;
     intent.putExtra(ConversationActivity.TEXT_EXTRA, textExtra);
+    if(resolvedFilename != null) intent.putExtra(ConversationActivity.FILENAME_EXTRA, resolvedFilename);
     if (resolvedExtra != null) intent.setDataAndType(resolvedExtra, type);
 
     return intent;
