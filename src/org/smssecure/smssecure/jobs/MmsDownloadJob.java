@@ -211,9 +211,10 @@ public class MmsDownloadJob extends MasterSecretJob {
 
         if (part.getData() != null) {
           Uri uri = provider.createUri(part.getData());
+          String potentialFilename = part.getFilename() != null ? Util.toIsoString(part.getFilename()) : null;
           attachments.add(new UriAttachment(uri, Util.toIsoString(part.getContentType()),
                                             AttachmentDatabase.TRANSFER_PROGRESS_DONE,
-                                            part.getData().length, Util.toIsoString(part.getFilename())));
+                                            part.getData().length, potentialFilename));
         }
       }
     }

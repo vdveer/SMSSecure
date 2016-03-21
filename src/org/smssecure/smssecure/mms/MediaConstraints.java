@@ -44,7 +44,7 @@ public abstract class MediaConstraints {
              (MediaUtil.isAudio(attachment)  && attachment.getSize() <= getAudioMaxSize()) ||
              (MediaUtil.isVideo(attachment)  && attachment.getSize() <= getVideoMaxSize()) ||
              (MediaUtil.isFile(attachment)   && attachment.getSize() <= getFileMaxSize()) ||
-             (!MediaUtil.isImage(attachment) && !MediaUtil.isAudio(attachment) && !MediaUtil.isVideo(attachment));
+             (!MediaUtil.isImage(attachment) && !MediaUtil.isAudio(attachment) && !MediaUtil.isVideo(attachment) && !MediaUtil.isFile(attachment));
     } catch (IOException ioe) {
       Log.w(TAG, "Failed to determine if media's constraints are satisfied.", ioe);
       return false;
@@ -63,7 +63,7 @@ public abstract class MediaConstraints {
   }
 
   public boolean canResize(@Nullable Attachment attachment) {
-    return attachment != null && MediaUtil.isImage(attachment) && !MediaUtil.isGif(attachment);
+    return attachment != null && MediaUtil.isImage(attachment) && !MediaUtil.isGif(attachment) && !MediaUtil.isFile(attachment);
   }
 
   public MediaStream getResizedMedia(@NonNull Context context,

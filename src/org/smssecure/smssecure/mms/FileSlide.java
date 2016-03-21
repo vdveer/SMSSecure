@@ -38,7 +38,6 @@ public class FileSlide extends Slide {
 
     public FileSlide(Context context, Uri uri, long dataSize, String fileName) throws IOException {
         super(context, constructAttachmentFromUri(context, uri, ContentType.SMS_SECURE_FILE, dataSize, fileName));
-
     }
 
     public FileSlide(Context context, Attachment attachment) {
