@@ -98,17 +98,18 @@ public class TransportOptions {
     throw new AssertionError("No options of default type!");
   }
 
-    public void disableTransport(Type type) {
-      List<TransportOption> options = find(type);
-      for(TransportOption option : options) {
-        enabledTransports.remove(option);
+  public void disableTransport(Type type) {
+    List<TransportOption> options = find(type);
+    for (TransportOption option : options) {
+      enabledTransports.remove(option);
         if (selectedOption.isPresent() && selectedOption.get().getType() == type) {
           setSelectedTransport(null);
-      }
+        }
     }
+  }
 
 
-        public List<TransportOption> getEnabledTransports() {
+  public List<TransportOption> getEnabledTransports() {
     return enabledTransports;
   }
 
