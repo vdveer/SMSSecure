@@ -99,8 +99,9 @@ public class TransportOptions {
   }
 
   public void disableTransport(Type type) {
-    Optional<TransportOption> option = find(type);
+    List<Optional<TransportOption>> options = find(type);
 
+    for(Optional<TransportOption> option : options)
     if (option.isPresent()) {
       enabledTransports.remove(option.get());
 
@@ -188,14 +189,14 @@ public class TransportOptions {
     }
   }
 
-  private Optional<TransportOption> find(Type type) {
+  private List<Optional<TransportOption>> find(Type type) {
+    List<Optional<TransportOption>> options = new LinkedList<>();
     for (TransportOption option : enabledTransports) {
       if (option.isType(type)) {
-        return Optional.of(option);
+        options.add(Optional.of(option));
       }
     }
-
-    return Optional.absent();
+    return options;
   }
 
   private boolean isEnabled(TransportOption transportOption) {
