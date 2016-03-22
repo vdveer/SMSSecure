@@ -16,6 +16,7 @@
  */
 package org.smssecure.smssecure;
 
+import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -36,6 +37,7 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.view.WindowCompat;
 import android.support.v7.app.AlertDialog;
+import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -861,11 +863,13 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     emojiToggle.attach(emojiDrawer);
     emojiToggle.setOnClickListener(new EmojiToggleListener());
     emojiDrawer.setEmojiEventListener(new EmojiEventListener() {
-      @Override public void onKeyEvent(KeyEvent keyEvent) {
+      @Override
+      public void onKeyEvent(KeyEvent keyEvent) {
         composeText.dispatchKeyEvent(keyEvent);
       }
 
-      @Override public void onEmojiSelected(String emoji) {
+      @Override
+      public void onEmojiSelected(String emoji) {
         composeText.insertEmoji(emoji);
       }
     });
@@ -1460,8 +1464,15 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     protected void onPostExecute(@NonNull  Pair<Recipients, RecipientsPreferences> result) {
       if (result.first == recipients) {
         updateInviteReminder(result.second != null && result.second.hasSeenInviteReminder());
-        updateDefaultSubscriptionId(result.second != null ? result.second.getDefaultSubscriptionId() : Optional.<Integer>absent());
+        updateDefaultSubscriptionId(result.second != null ?
+                result.second.getDefaultSubscriptionId() : Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP_MR1 ?
+                Optional.of(getDefaultMessagingSubscriptionId()) : Optional.<Integer>absent());
       }
+    }
+
+    @TargetApi(22)
+    private int getDefaultMessagingSubscriptionId(){
+      return SmsManager.getDefaultSmsSubscriptionId();
     }
   }
 }
