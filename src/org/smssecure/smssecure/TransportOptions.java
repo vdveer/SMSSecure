@@ -98,20 +98,17 @@ public class TransportOptions {
     throw new AssertionError("No options of default type!");
   }
 
-  public void disableTransport(Type type) {
-    List<Optional<TransportOption>> options = find(type);
-
-    for(Optional<TransportOption> option : options)
-    if (option.isPresent()) {
-      enabledTransports.remove(option.get());
-
-      if (selectedOption.isPresent() && selectedOption.get().getType() == type) {
-        setSelectedTransport(null);
+    public void disableTransport(Type type) {
+      List<TransportOption> options = find(type);
+      for(TransportOption option : options) {
+        enabledTransports.remove(option);
+        if (selectedOption.isPresent() && selectedOption.get().getType() == type) {
+          setSelectedTransport(null);
       }
     }
-  }
 
-  public List<TransportOption> getEnabledTransports() {
+
+        public List<TransportOption> getEnabledTransports() {
     return enabledTransports;
   }
 
@@ -189,11 +186,11 @@ public class TransportOptions {
     }
   }
 
-  private List<Optional<TransportOption>> find(Type type) {
-    List<Optional<TransportOption>> options = new LinkedList<>();
+  private List<TransportOption> find(Type type) {
+    List<TransportOption> options = new LinkedList<>();
     for (TransportOption option : enabledTransports) {
       if (option.isType(type)) {
-        options.add(Optional.of(option));
+        options.add(option);
       }
     }
     return options;
