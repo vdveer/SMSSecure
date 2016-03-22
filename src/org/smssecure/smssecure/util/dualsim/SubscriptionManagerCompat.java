@@ -3,6 +3,7 @@ package org.smssecure.smssecure.util.dualsim;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.telephony.SmsManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 
@@ -31,6 +32,14 @@ public class SubscriptionManagerCompat {
     } else {
       return Optional.absent();
     }
+  }
+
+  public static Optional<Integer> getDefaultMessagingSubscriptionId() {
+    if (Build.VERSION.SDK_INT < 22) {
+      return Optional.absent();
+    }
+
+    return SmsManager.getDefaultSmsSubscriptionId() < 0 ? Optional.<Integer>absent() : Optional.of(SmsManager.getDefaultSmsSubscriptionId());
   }
 
   public @NonNull List<SubscriptionInfoCompat> getActiveSubscriptionInfoList() {

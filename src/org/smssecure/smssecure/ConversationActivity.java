@@ -123,6 +123,7 @@ import org.smssecure.smssecure.util.Util;
 import org.smssecure.smssecure.util.ViewUtil;
 import org.smssecure.smssecure.util.concurrent.ListenableFuture;
 import org.smssecure.smssecure.util.concurrent.SettableFuture;
+import org.smssecure.smssecure.util.dualsim.SubscriptionManagerCompat;
 import org.whispersystems.libaxolotl.InvalidMessageException;
 import org.whispersystems.libaxolotl.util.guava.Optional;
 
@@ -775,6 +776,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     }
 
     calculateCharactersRemaining();
+    supportInvalidateOptionsMenu();
     supportInvalidateOptionsMenu();
   }
 
@@ -1465,14 +1467,9 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       if (result.first == recipients) {
         updateInviteReminder(result.second != null && result.second.hasSeenInviteReminder());
         updateDefaultSubscriptionId(result.second != null ?
-                result.second.getDefaultSubscriptionId() : Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP_MR1 ?
-                Optional.of(getDefaultMessagingSubscriptionId()) : Optional.<Integer>absent());
-      }
-    }
+                result.second.getDefaultSubscriptionId() : SubscriptionManagerCompat.getDefaultMessagingSubscriptionId());
 
-    @TargetApi(22)
-    private int getDefaultMessagingSubscriptionId(){
-      return SmsManager.getDefaultSmsSubscriptionId();
+      }
     }
   }
 }
