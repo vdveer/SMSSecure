@@ -429,7 +429,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
           @Override
           protected Void doInBackground(Void... params) {
             DatabaseFactory.getRecipientPreferenceDatabase(ConversationActivity.this)
-                    .setMuted(recipients, until);
+                           .setMuted(recipients, until);
 
             return null;
           }
