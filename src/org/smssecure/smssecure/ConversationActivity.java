@@ -1453,7 +1453,6 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       if (result.first == recipients) {
         updateInviteReminder(result.second != null && result.second.hasSeenInviteReminder());
         updateDefaultSubscriptionId(result.second != null ? result.second.getDefaultSubscriptionId() : SubscriptionManagerCompat.getDefaultMessagingSubscriptionId());
-
       }
     }
   }
