@@ -103,9 +103,9 @@ public class TransportOptions {
     List<TransportOption> options = find(type);
     for (TransportOption option : options) {
       enabledTransports.remove(option);
-        if (selectedOption.isPresent() && selectedOption.get().getType() == type) {
-          setSelectedTransport(null);
-        }
+      if (selectedOption.isPresent() && selectedOption.get().getType() == type) {
+        setSelectedTransport(null);
+      }
     }
   }
 
