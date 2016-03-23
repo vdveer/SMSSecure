@@ -520,9 +520,6 @@ public class DatabaseFactory {
     }
 
     @Override
-    public void onDowngrade(SQLiteDatabase db, int oldVersin, int newVersion){}
-
-    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
       db.beginTransaction();
 
@@ -549,7 +546,7 @@ public class DatabaseFactory {
         executeStatements(db, new String[] {
             "CREATE INDEX IF NOT EXISTS thread_recipient_ids_index ON thread (recipient_ids);",
         });
-        executeStatements(db, new String[]{
+        executeStatements(db, new String[] {
             "CREATE INDEX IF NOT EXISTS mms_addresses_mms_id_index ON mms_addresses (mms_id);",
         });
       }
@@ -564,7 +561,7 @@ public class DatabaseFactory {
 
       if (oldVersion < INTRODUCED_DRAFTS_VERSION) {
         db.execSQL("CREATE TABLE drafts (_id INTEGER PRIMARY KEY, thread_id INTEGER, type TEXT, value TEXT);");
-        executeStatements(db, new String[]{
+        executeStatements(db, new String[] {
             "CREATE INDEX IF NOT EXISTS draft_thread_index ON drafts (thread_id);",
         });
       }

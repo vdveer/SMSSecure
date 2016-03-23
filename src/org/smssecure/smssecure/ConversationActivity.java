@@ -991,23 +991,17 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     Log.w("ComposeMessageActivity", "Selected: " + type);
     switch (type) {
     case AttachmentTypeSelectorAdapter.ADD_IMAGE:
-      AttachmentManager.selectImage(this, PICK_IMAGE);
-      break;
+      AttachmentManager.selectImage(this, PICK_IMAGE); break;
     case AttachmentTypeSelectorAdapter.ADD_VIDEO:
-      AttachmentManager.selectVideo(this, PICK_VIDEO);
-      break;
+      AttachmentManager.selectVideo(this, PICK_VIDEO); break;
     case AttachmentTypeSelectorAdapter.ADD_SOUND:
-      AttachmentManager.selectAudio(this, PICK_AUDIO);
-      break;
+      AttachmentManager.selectAudio(this, PICK_AUDIO); break;
     case AttachmentTypeSelectorAdapter.ADD_CONTACT_INFO:
-      AttachmentManager.selectContactInfo(this, PICK_CONTACT_INFO);
-      break;
+      AttachmentManager.selectContactInfo(this, PICK_CONTACT_INFO); break;
     case AttachmentTypeSelectorAdapter.TAKE_PHOTO:
-      attachmentManager.capturePhoto(this, TAKE_PHOTO);
-      break;
+      attachmentManager.capturePhoto(this, TAKE_PHOTO); break;
     case AttachmentTypeSelectorAdapter.ADD_FILE:
-      attachmentManager.selectFile(masterSecret, this, PICK_FILE);
-      break;
+      attachmentManager.selectFile(masterSecret, this, PICK_FILE); break;
     }
   }
 
