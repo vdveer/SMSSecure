@@ -298,7 +298,6 @@ public class AttachmentDatabase extends Database {
     DatabaseAttachment databaseAttachment = (DatabaseAttachment) attachment;
     File               dataFile           = getAttachmentDataFile(databaseAttachment.getAttachmentId(), DATA);
 
-
     if (dataFile == null) {
       throw new MmsException("No attachment data found!");
     }
@@ -308,8 +307,9 @@ public class AttachmentDatabase extends Database {
     ContentValues contentValues = new ContentValues();
     contentValues.put(SIZE, dataSize);
     contentValues.put(CONTENT_TYPE, mediaStream.getMimeType());
-    if(attachment.getFileName() != null)
+    if (attachment.getFileName() != null) {
       contentValues.put(FILENAME, databaseAttachment.getFileName());
+    }
 
     database.update(TABLE_NAME, contentValues, PART_ID_WHERE, databaseAttachment.getAttachmentId().toStrings());
 
@@ -470,9 +470,9 @@ public class AttachmentDatabase extends Database {
     contentValues.put(CONTENT_LOCATION, attachment.getLocation());
     contentValues.put(CONTENT_DISPOSITION, attachment.getKey());
     contentValues.put(NAME, attachment.getRelay());
-    if(attachment.getFileName() != null)
+    if (attachment.getFileName() != null) {
       contentValues.put(FILENAME, attachment.getFileName());
-
+    }
     if (partData != null) {
       contentValues.put(DATA, partData.first.getAbsolutePath());
       contentValues.put(SIZE, partData.second);

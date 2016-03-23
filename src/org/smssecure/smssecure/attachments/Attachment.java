@@ -89,5 +89,7 @@ public abstract class Attachment {
   }
 
   @Nullable
-  public String getFileName(){ return fileName; }
+  public String getFileName(){
+    return fileName;
+  }
 }

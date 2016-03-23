@@ -79,5 +79,5 @@ public class UriAttachment extends Attachment {
       }
     }
     return fileName;
-    }
+  }
 }

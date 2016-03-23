@@ -36,40 +36,42 @@ import ws.com.google.android.mms.pdu.PduPart;
 
 public class FileSlide extends Slide {
 
-    public FileSlide(Context context, Uri uri, long dataSize, String fileName) throws IOException {
-        super(context, constructAttachmentFromUri(context, uri, ContentType.SMS_SECURE_FILE, dataSize, fileName));
-    }
+  public FileSlide(Context context, Uri uri, long dataSize, String fileName) throws IOException {
+    super(context, constructAttachmentFromUri(context, uri, ContentType.SMS_SECURE_FILE, dataSize, fileName));
+  }
 
-    public FileSlide(Context context, Attachment attachment) {
-        super(context, attachment);
-    }
+  public FileSlide(Context context, Attachment attachment) {
+    super(context, attachment);
+  }
 
-    @Override
-    @Nullable
-    public Uri getThumbnailUri() {
-        return null;
-    }
+  @Override
+  @Nullable
+  public Uri getThumbnailUri() {
+    return null;
+  }
 
-    @Override
-    public boolean hasPlaceholder() {
-        return true;
-    }
+  @Override
+  public boolean hasPlaceholder() {
+    return true;
+  }
 
-    @Override
-    public boolean hasFile(){ return true; }
+  @Override
+  public boolean hasFile(){
+    return true;
+  }
 
-    @Override
-    public boolean hasImage() {
-        return true;
-    }
+  @Override
+  public boolean hasImage() {
+    return true;
+  }
 
-    @Override
-    public String getFileName(){
-        return attachment.getFileName();
-    }
+  @Override
+  public String getFileName(){
+    return attachment.getFileName();
+  }
 
-    @Override
-    public @DrawableRes int getPlaceholderRes(Theme theme) {
-        return ResUtil.getDrawableRes(theme, R.attr.conversation_attach_file);
-    }
+  @Override
+  public @DrawableRes int getPlaceholderRes(Theme theme) {
+    return ResUtil.getDrawableRes(theme, R.attr.conversation_attach_file);
+  }
 }

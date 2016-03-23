@@ -1,9 +1,7 @@
 package org.smssecure.smssecure.mms;
 
 import android.text.TextUtils;
-import android.widget.Toast;
 
-import org.smssecure.smssecure.ApplicationContext;
 import org.smssecure.smssecure.attachments.Attachment;
 import org.smssecure.smssecure.recipients.Recipients;
 import org.smssecure.smssecure.util.Base64;
@@ -37,7 +35,7 @@ public class OutgoingMediaMessage {
 
     this(recipients,
          buildMessage(slideDeck, message),
-            slideDeck.asAttachments(),
+         slideDeck.asAttachments(),
          sentTimeMillis, subscriptionId,
          distributionType);
   }

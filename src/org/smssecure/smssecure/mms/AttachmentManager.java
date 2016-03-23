@@ -80,23 +80,14 @@ public class AttachmentManager {
     thumbnail.setOnClickListener(new ThumbnailClickListener());
   }
 
-  //public void clearIfFileSlides(){
-    //if(slideDeck.hasFileSlide()) {
-    //  slideDeck.clear();
-    //  attachmentView.setVisibility(View.GONE);
-    //  attachmentListener.onAttachmentChanged();
-    //}
-  //}
-
-
   public void selectFile(final MasterSecret secret, final Activity activity, int requestCode) {
-        new FileChooser(activity).setFileListener(new FileChooser.FileSelectedListener() {
-         @Override
-        public void fileSelected(final File file) {
-           setMedia(secret, Uri.fromFile(file), MediaType.FILE, new MmsMediaConstraints());
+    new FileChooser(activity).setFileListener(new FileChooser.FileSelectedListener() {
+      @Override
+      public void fileSelected(final File file) {
+        setMedia(secret, Uri.fromFile(file), MediaType.FILE, new MmsMediaConstraints());
       }
-        }).showDialog();
-      }
+    }).showDialog();
+  }
 
   public void clear() {
     ViewUtil.fadeOut(attachmentView, 200).addListener(new Listener<Boolean>() {
@@ -108,8 +99,7 @@ public class AttachmentManager {
       }
 
       @Override
-      public void onFailure(ExecutionException e) {
-      }
+      public void onFailure(ExecutionException e) {}
     });
 
     markGarbage(getSlideUri());
@@ -181,8 +171,8 @@ public class AttachmentManager {
           final Slide slide     = mediaType.createSlide(context, uri, mediaSize, fileName);
           Log.w(TAG, "slide with size " + mediaSize + " took " + (System.currentTimeMillis() - start) + "ms");
           return slide;
-        } catch (IOException e) {
-          Log.w(TAG, e);
+        } catch (IOException ioe) {
+          Log.w(TAG, ioe);
           return null;
         }
       }
@@ -336,14 +326,14 @@ public class AttachmentManager {
                                       @NonNull Uri     uri,
                                                long    dataSize,
                                                 String fileName)
-            throws IOException {
+        throws IOException {
       switch (this) {
-        case IMAGE: return new ImageSlide(context, uri, dataSize);
-        case GIF:   return new GifSlide(context, uri, dataSize);
-        case AUDIO: return new AudioSlide(context, uri, dataSize);
-        case VIDEO: return new VideoSlide(context, uri, dataSize);
-         case FILE:  return new FileSlide(context, uri, dataSize, fileName);
-        default:    throw  new AssertionError("unrecognized enum");
+      case IMAGE: return new ImageSlide(context, uri, dataSize);
+      case GIF:   return new GifSlide(context, uri, dataSize);
+      case AUDIO: return new AudioSlide(context, uri, dataSize);
+      case VIDEO: return new VideoSlide(context, uri, dataSize);
+      case FILE:  return new FileSlide(context, uri, dataSize, fileName);
+      default:    throw  new AssertionError("unrecognized enum");
       }
     }
 

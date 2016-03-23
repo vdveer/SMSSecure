@@ -95,8 +95,9 @@ public class SlideDeck {
 
   public boolean removeFileSlides() {
     boolean returnObject = false;
-    if(slides.isEmpty())
+    if (slides.isEmpty()) {
       return returnObject;
+    }
     for (Slide slide : slides) {
       if (slide.hasFile()) {
         returnObject = true;

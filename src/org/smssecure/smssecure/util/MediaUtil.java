@@ -90,8 +90,9 @@ public class MediaUtil {
              ? ContentType.IMAGE_JPEG
              : mimeType;
     default:
-      if(ContentType.isNonTextVideoImageAudioType(mimeType))
+      if (ContentType.isNonTextVideoImageAudioType(mimeType)) {
         return ContentType.SMS_SECURE_FILE;
+      }
       return mimeType;
     }
   }

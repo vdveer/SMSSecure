@@ -53,6 +53,8 @@ public class MmsMediaConstraints extends MediaConstraints {
   }
 
   @Override
-  public int getFileMaxSize() { return getMaxMmsPref(); }
+  public int getFileMaxSize() {
+    return getMaxMmsPref();
+  }
 
 }

@@ -529,7 +529,7 @@ public class ConversationItem extends LinearLayout
         intent.putExtra(MediaPreviewActivity.DATE_EXTRA, messageRecord.getTimestamp());
 
         context.startActivity(intent);
-      } else if (slide.hasFile()){
+      } else if (slide.hasFile()) {
         SaveAttachmentTask.showWarningDialog(context, new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int which) {
             SaveAttachmentTask saveTask = new SaveAttachmentTask(context, masterSecret);
@@ -538,7 +538,7 @@ public class ConversationItem extends LinearLayout
           }
         });
 
-      }else{
+      } else {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.ConversationItem_view_secure_media_question);
         builder.setIconAttribute(R.attr.dialog_alert_icon);
