@@ -123,7 +123,7 @@ android {
     defaultConfig {
         versionCode 119
         versionName "0.13.2"
-        applicationId "su.nederland.smssecure"
+        applicationId "su.nederland.gibberish"
         minSdkVersion 9
         targetSdkVersion 22
 
