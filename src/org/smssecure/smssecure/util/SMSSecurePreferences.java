@@ -89,8 +89,6 @@ public class SMSSecurePreferences {
   private static final String RATING_ENABLED_PREF              = "pref_rating_enabled";
   public  static final String NOTIFICATION_PRIVACY_PREF        = "pref_notification_privacy";
 
-  private static final String MULTIPART_MMS                    = "pref_experimental_multipartmms_file";
-
   private static final String MEDIA_DOWNLOAD_PREF              = "pref_media_download";
   private static final String MEDIA_DOWNLOAD_ROAMING_PREF      = "pref_media_download_roaming";
 
@@ -100,10 +98,6 @@ public class SMSSecurePreferences {
 
   public static long getRatingLaterTimestamp(Context context) {
     return getLongPreference(context, RATING_LATER_PREF, 0);
-  }
-
-  public static boolean getMultipartMMS(Context context){
-    return getBooleanPreference(context, MULTIPART_MMS, true);
   }
 
   public static void setRatingLaterTimestamp(Context context, long timestamp) {

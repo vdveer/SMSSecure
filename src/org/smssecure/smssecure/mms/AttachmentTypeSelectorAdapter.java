@@ -84,7 +84,7 @@ public class AttachmentTypeSelectorAdapter extends ArrayAdapter<AttachmentTypeSe
     addItem(data, context.getString(R.string.AttachmentTypeSelectorAdapter_video),   ResUtil.getDrawableRes(context, R.attr.conversation_attach_video),        ADD_VIDEO);
     addItem(data, context.getString(R.string.AttachmentTypeSelectorAdapter_audio), ResUtil.getDrawableRes(context, R.attr.conversation_attach_sound), ADD_SOUND);
     addItem(data, context.getString(R.string.AttachmentTypeSelectorAdapter_contact), ResUtil.getDrawableRes(context, R.attr.conversation_attach_contact_info), ADD_CONTACT_INFO);
-    if (isEncryptedConversation && SMSSecurePreferences.getMultipartMMS(context)) {
+    if (isEncryptedConversation) {
       if (fileIdentifier == null) {
         fileIdentifier = new IconListItem(context.getString(R.string.AttachmentTypeSelectorAdapter_file), ResUtil.getDrawableRes(context, R.attr.conversation_attach), ADD_FILE);
       }
@@ -101,10 +101,10 @@ public class AttachmentTypeSelectorAdapter extends ArrayAdapter<AttachmentTypeSe
     if(fileIdentifier == null) {
       fileIdentifier = new IconListItem(context.getString(R.string.AttachmentTypeSelectorAdapter_file), ResUtil.getDrawableRes(context, R.attr.conversation_attach), ADD_FILE);
     }
-    if(isSecure && getPosition(fileIdentifier) == -1 && SMSSecurePreferences.getMultipartMMS(context)) {
+    if(isSecure && getPosition(fileIdentifier) == -1) {
       add(fileIdentifier);
     }
-    else if((!isSecure || !SMSSecurePreferences.getMultipartMMS(context)) && getPosition(fileIdentifier) >= 0) {
+    else if((!isSecure) && getPosition(fileIdentifier) >= 0) {
       remove(fileIdentifier);
     }
   }
