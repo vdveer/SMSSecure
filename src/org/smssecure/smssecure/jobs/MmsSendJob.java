@@ -25,6 +25,7 @@ import org.smssecure.smssecure.recipients.RecipientFormattingException;
 import org.smssecure.smssecure.transport.InsecureFallbackApprovalException;
 import org.smssecure.smssecure.transport.UndeliverableMessageException;
 import org.smssecure.smssecure.util.Hex;
+import org.smssecure.smssecure.util.MediaUtil;
 import org.smssecure.smssecure.util.NumberUtil;
 import org.smssecure.smssecure.util.SmilUtil;
 import org.smssecure.smssecure.util.TelephonyUtil;
@@ -234,6 +235,9 @@ public class MmsSendJob extends SendJob {
         PduPart part = new PduPart();
         part.setData(Util.readFully(PartAuthority.getAttachmentStream(context, masterSecret, attachment.getDataUri())));
         part.setContentType(Util.toIsoBytes(attachment.getContentType()));
+        if (MediaUtil.isFile(attachment) && attachment.getFileName() != null) {
+          part.setFilename(Util.toIsoBytes(attachment.getFileName()));
+        }
         part.setContentId((System.currentTimeMillis() + "").getBytes());
         part.setName((System.currentTimeMillis() + "").getBytes());
 
