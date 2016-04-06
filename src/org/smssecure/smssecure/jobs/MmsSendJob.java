@@ -29,6 +29,7 @@ import org.smssecure.smssecure.util.NumberUtil;
 import org.smssecure.smssecure.util.SmilUtil;
 import org.smssecure.smssecure.util.TelephonyUtil;
 import org.smssecure.smssecure.util.Util;
+import org.smssecure.smssecure.util.WakeLockUtil;
 import org.whispersystems.jobqueue.JobParameters;
 import org.whispersystems.jobqueue.requirements.NetworkRequirement;
 import org.whispersystems.libaxolotl.NoSessionException;
@@ -110,6 +111,7 @@ public class MmsSendJob extends SendJob {
       database.markAsPendingInsecureSmsFallback(messageId);
       notifyMediaMessageDeliveryFailed(context, messageId);
     }
+    WakeLockUtil.disableWakeLockIfActive(getContext());
   }
 
   @Override

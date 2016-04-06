@@ -32,6 +32,7 @@ import org.smssecure.smssecure.protocol.WirePrefix;
 import org.smssecure.smssecure.providers.SingleUseBlobProvider;
 import org.smssecure.smssecure.service.KeyCachingService;
 import org.smssecure.smssecure.util.Util;
+import org.smssecure.smssecure.util.WakeLockUtil;
 import org.whispersystems.jobqueue.JobParameters;
 import org.whispersystems.jobqueue.requirements.NetworkRequirement;
 import org.whispersystems.libaxolotl.DuplicateMessageException;
@@ -154,6 +155,7 @@ public class MmsDownloadJob extends MasterSecretJob {
       Log.w(TAG, e);
       database.markAsDecryptFailed(messageId, threadId);
     }
+    WakeLockUtil.disableWakeLockIfActive(getContext());
   }
 
   @Override

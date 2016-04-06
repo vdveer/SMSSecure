@@ -21,9 +21,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
 import org.smssecure.smssecure.util.Util;
+import org.smssecure.smssecure.util.WakeLockUtil;
 
 import java.util.concurrent.TimeoutException;
 
@@ -71,6 +73,7 @@ public abstract class LollipopMmsConnection extends BroadcastReceiver {
     while (!resultAvailable) {
       Util.wait(this, Math.max(1, timeoutExpiration - System.currentTimeMillis()));
       if (System.currentTimeMillis() >= timeoutExpiration) {
+        WakeLockUtil.disableWakeLockIfActive(getContext());
         throw new TimeoutException("timeout when waiting for MMS");
       }
     }

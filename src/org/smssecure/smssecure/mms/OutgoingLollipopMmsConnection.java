@@ -29,6 +29,7 @@ import android.util.Log;
 import org.smssecure.smssecure.providers.MmsBodyProvider;
 import org.smssecure.smssecure.transport.UndeliverableMessageException;
 import org.smssecure.smssecure.util.Util;
+import org.smssecure.smssecure.util.WakeLockUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -75,6 +76,8 @@ public class OutgoingLollipopMmsConnection extends LollipopMmsConnection impleme
         smsManager = SmsManager.getDefault();
       }
 
+      WakeLockUtil.aquireWakeLockFor(getContext());
+
       smsManager.sendMultimediaMessage(getContext(),
                                        pointer.getUri(),
                                        null,
@@ -87,11 +90,13 @@ public class OutgoingLollipopMmsConnection extends LollipopMmsConnection impleme
       pointer.close();
 
       if (response == null) {
+        WakeLockUtil.disableWakeLockIfActive(getContext());
         throw new UndeliverableMessageException("Null response.");
       }
 
       return (SendConf) new PduParser(response).parse();
     } catch (IOException | TimeoutException e) {
+      WakeLockUtil.disableWakeLockIfActive(getContext());
       throw new UndeliverableMessageException(e);
     } finally {
       endTransaction();

@@ -17,6 +17,7 @@
 package org.smssecure.smssecure.mms;
 
 import android.annotation.TargetApi;
+import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build.VERSION;
@@ -28,6 +29,7 @@ import android.util.Log;
 
 import org.smssecure.smssecure.providers.MmsBodyProvider;
 import org.smssecure.smssecure.util.Util;
+import org.smssecure.smssecure.util.WakeLockUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -76,6 +78,8 @@ public class IncomingLollipopMmsConnection extends LollipopMmsConnection impleme
         smsManager = SmsManager.getDefault();
       }
 
+      WakeLockUtil.aquireWakeLockFor(getContext());
+
       smsManager.downloadMultimediaMessage(getContext(),
                                            contentLocation,
                                            pointer.getUri(),
@@ -90,6 +94,7 @@ public class IncomingLollipopMmsConnection extends LollipopMmsConnection impleme
 
       return (RetrieveConf) new PduParser(baos.toByteArray()).parse();
     } catch (IOException | TimeoutException e) {
+      WakeLockUtil.disableWakeLockIfActive(getContext());
       Log.w(TAG, e);
       throw new MmsException(e);
     } finally {
